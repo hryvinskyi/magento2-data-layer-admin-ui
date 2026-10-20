@@ -2,7 +2,7 @@
     "name": "hryvinskyi/magento2-data-layer-admin-ui",
     "description": "Admin surface of the GA4 data layer: its configuration section in the Sales tab, the access rule that guards it, the events table and the other field renderers, option lists, validation rules and validated settings.",
     "type": "magento2-module",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "license": "MIT",
     "authors": [
         {
