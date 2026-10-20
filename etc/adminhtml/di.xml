@@ -1,0 +1,570 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026. Volodymyr Hryvinskyi. All rights reserved.
+ * Author: Volodymyr Hryvinskyi <volodymyr@hryvinskyi.com>
+ * GitHub: https://github.com/hryvinskyi
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Whether events routed to the server go anywhere: nowhere until a server-side delivery module answers -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\ServerDeliveryStateInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\NoServerDelivery"/>
+
+    <!-- Admin ES modules: an import map resolves the names their modules import one another by -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\ModuleScriptInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\ModuleScript"/>
+
+    <!-- The events table: one row per known event, saving the disabled events and the routing rows -->
+    <type name="Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\EventsTable">
+        <arguments>
+            <argument name="channels" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Config\Source\Channels</argument>
+        </arguments>
+    </type>
+
+    <!-- The two stored event settings, read the same way by the events table and the setup wizard -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Events\StoredEventSettingsInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Events\StoredEventSettings"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Events\EventGroupLabelInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Events\EventGroupLabel"/>
+
+    <!-- Setup wizard: the state it is given, read from the scope tree, the settings it edits and their stored,
+         shipped and fixed values -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SetupStateProviderInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SetupStateProvider"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\ScopeTreeInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\ScopeTree"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\StoredSettingsInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\StoredSettings"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\BuiltInDefaultsInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\BuiltInDefaults"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SettingLocksInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingLocks"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SettingPresentationInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingPresentation"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\PatternTranslatorInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\PatternTranslator"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\EventsProjectionInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\EventsProjection"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Data\SettingDescriptorInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Data\SettingDescriptor"/>
+
+    <!-- Setup wizard: how each kind of setting travels between the stored value and the browser, and which values
+         each takes -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SettingKindsInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingKinds"/>
+    <type name="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingKinds">
+        <arguments>
+            <argument name="kinds" xsi:type="array">
+                <item name="flag" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Kind\FlagKind</item>
+                <item name="choice" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Kind\ChoiceKind</item>
+                <item name="text" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Kind\TextKind</item>
+                <item name="number" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Kind\NumberKind</item>
+                <item name="secret" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Kind\SecretKind</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Setup wizard: the settings it edits. Another module adds its own as items of the same argument -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SettingDescriptorsInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingDescriptors"/>
+    <type name="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingDescriptors">
+        <arguments>
+            <argument name="descriptors" xsi:type="array">
+                <item name="enabled" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/general/enabled</item>
+                    <item name="kind" xsi:type="string">flag</item>
+                    <item name="step" xsi:type="string">connect</item>
+                </item>
+                <item name="container_id" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/gtm/container_id</item>
+                    <item name="kind" xsi:type="string">text</item>
+                    <item name="step" xsi:type="string">connect</item>
+                    <item name="pattern" xsi:type="const">Hryvinskyi\DataLayer\Api\ConfigInterface::CONTAINER_ID_PATTERN</item>
+                </item>
+                <item name="script_host" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/gtm/script_host</item>
+                    <item name="kind" xsi:type="string">text</item>
+                    <item name="step" xsi:type="string">connect</item>
+                    <item name="pattern" xsi:type="const">Hryvinskyi\DataLayer\Api\ConfigInterface::SCRIPT_HOST_PATTERN</item>
+                </item>
+                <item name="measurement_id" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/gtag/measurement_id</item>
+                    <item name="kind" xsi:type="string">text</item>
+                    <item name="step" xsi:type="string">connect</item>
+                    <item name="pattern" xsi:type="const">Hryvinskyi\DataLayer\Api\ConfigInterface::MEASUREMENT_ID_PATTERN</item>
+                    <item name="caseInsensitive" xsi:type="boolean">true</item>
+                </item>
+                <item name="item_id" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/item/identifier_attribute</item>
+                    <item name="kind" xsi:type="string">choice</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="brand" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/item/brand_attribute</item>
+                    <item name="kind" xsi:type="string">choice</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="tax_catalog" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/item/catalogue_price_includes_tax</item>
+                    <item name="kind" xsi:type="string">flag</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="tax_cart" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/item/line_price_includes_tax</item>
+                    <item name="kind" xsi:type="string">flag</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="hidden_price" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/item/hidden_price_handling</item>
+                    <item name="kind" xsi:type="string">choice</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="purchase_value" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/purchase/value_basis</item>
+                    <item name="kind" xsi:type="string">choice</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="deduct_tax" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/purchase/deduct_tax</item>
+                    <item name="kind" xsi:type="string">flag</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="include_tax" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/purchase/include_tax</item>
+                    <item name="kind" xsi:type="string">flag</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="include_shipping" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/purchase/include_shipping</item>
+                    <item name="kind" xsi:type="string">flag</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="checkout_value" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/checkout/step_value_basis</item>
+                    <item name="kind" xsi:type="string">choice</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+                <item name="list_view" xsi:type="array">
+                    <item name="path" xsi:type="string">hryvinskyi_datalayer/lists/impression_trigger</item>
+                    <item name="kind" xsi:type="string">choice</item>
+                    <item name="step" xsi:type="string">products</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Setup wizard: what each module adds to the page. Another module adds its own as an item of the same
+         argument -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SetupContributionsInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SetupContributions"/>
+    <type name="Hryvinskyi\DataLayerAdminUi\Model\Setup\SetupContributions">
+        <arguments>
+            <argument name="contributions" xsi:type="array">
+                <item name="core" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\CoreContribution</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Hryvinskyi\DataLayerAdminUi\Model\Setup\CoreContribution">
+        <arguments>
+            <!-- The wording of the wizard shell and its built-in steps, keyed as the browser code asks for it:
+                 a count-dependent text has one key per plural category, placeholders are %1 to %n -->
+            <argument name="phrases" xsi:type="array">
+                <item name="wizard.title" xsi:type="string" translate="true">Set up GA4 tracking</item>
+                <item name="wizard.loading" xsi:type="string" translate="true">Loading the setup wizard…</item>
+                <item name="wizard.failed" xsi:type="string" translate="true">The setup wizard could not start. Reload the page, or use the advanced settings.</item>
+                <item name="step.counter" xsi:type="string" translate="true">Step %1 of %2</item>
+                <item name="step.scope.title" xsi:type="string" translate="true">Scope</item>
+                <item name="step.scope.intro" xsi:type="string" translate="true">Most shops set everything up once at Default and override only a few settings per website.</item>
+                <item name="step.connect.title" xsi:type="string" translate="true">Connect</item>
+                <item name="step.connect.intro" xsi:type="string" translate="true">Choose how your store loads Google’s script.</item>
+                <item name="step.track.title" xsi:type="string" translate="true">What to track</item>
+                <item name="step.track.intro" xsi:type="string" translate="true">Pick the closest preset, then fine-tune single events.</item>
+                <item name="step.products.title" xsi:type="string" translate="true">Products and prices</item>
+                <item name="step.products.intro" xsi:type="string" translate="true">Choose which product data and prices GA4 receives.</item>
+                <item name="step.review.title" xsi:type="string" translate="true">Review and save</item>
+                <item name="step.review.intro" xsi:type="string" translate="true">Nothing reaches the store until you click Save all.</item>
+                <item name="step.status.current" xsi:type="string" translate="true">In progress</item>
+                <item name="step.status.current_attention" xsi:type="string" translate="true">In progress · needs attention</item>
+                <item name="step.status.attention" xsi:type="string" translate="true">Needs attention</item>
+                <item name="step.status.done" xsi:type="string" translate="true">Done</item>
+                <item name="action.continue" xsi:type="string" translate="true">Continue</item>
+                <item name="action.back" xsi:type="string" translate="true">Back</item>
+                <item name="action.skip" xsi:type="string" translate="true">Skip this step</item>
+                <item name="action.save_all" xsi:type="string" translate="true">Save all</item>
+                <item name="action.close" xsi:type="string" translate="true">Close</item>
+                <item name="action.advanced" xsi:type="string" translate="true">Advanced settings</item>
+                <item name="action.override" xsi:type="string" translate="true">Override here</item>
+                <item name="action.inherit" xsi:type="string" translate="true">Use inherited value</item>
+                <item name="footer.unsaved.one" xsi:type="string" translate="true">%1 unsaved change</item>
+                <item name="footer.unsaved.other" xsi:type="string" translate="true">%1 unsaved changes</item>
+                <item name="footer.unsaved_note" xsi:type="string" translate="true">saved with Save all in the last step</item>
+                <item name="footer.none" xsi:type="string" translate="true">No unsaved changes</item>
+                <item name="footer.all_saved" xsi:type="string" translate="true">All changes saved</item>
+                <item name="leave.confirm" xsi:type="string" translate="true">You have unsaved changes. Leave the setup wizard and lose them?</item>
+                <item name="scope.default" xsi:type="string" translate="true">Default · All websites</item>
+                <item name="scope.website" xsi:type="string" translate="true">Website · %1</item>
+                <item name="scope.store" xsi:type="string" translate="true">Store view · %1</item>
+                <item name="scope.default.applies" xsi:type="string" translate="true">Applies to all websites and store views that do not override it.</item>
+                <item name="scope.website.applies" xsi:type="string" translate="true">Applies to the %1 website and its store views that do not override it.</item>
+                <item name="scope.store.applies" xsi:type="string" translate="true">Applies to the %1 store view only. Nothing inherits from it.</item>
+                <item name="scope.single_website" xsi:type="string" translate="true">Your shop has one website, so Default is selected. You can skip this step.</item>
+                <item name="scope.skip_to_connect" xsi:type="string" translate="true">Skip to Connect</item>
+                <item name="scope.uses_default" xsi:type="string" translate="true">Uses Default for everything</item>
+                <item name="scope.inherits_from" xsi:type="string" translate="true">Inherits from %1</item>
+                <item name="origin.inherited" xsi:type="string" translate="true">Inherited from %1</item>
+                <item name="origin.default" xsi:type="string" translate="true">Default · used by every website</item>
+                <item name="origin.website" xsi:type="string" translate="true">Set for this website</item>
+                <item name="origin.store" xsi:type="string" translate="true">Set for this store view</item>
+                <item name="origin.reach.website" xsi:type="string" translate="true">Website setting — switch scope to %1</item>
+                <item name="origin.reach.default" xsi:type="string" translate="true">Default setting — switch scope to Default</item>
+                <item name="mode.label" xsi:type="string" translate="true">How pages load Google</item>
+                <item name="mode.gtm" xsi:type="string" translate="true">Google Tag Manager container</item>
+                <item name="mode.gtm.description" xsi:type="string" translate="true">Tags live in your GTM container. The store fills the data layer.</item>
+                <item name="mode.gtag" xsi:type="string" translate="true">Google Analytics directly (gtag.js)</item>
+                <item name="mode.gtag.description" xsi:type="string" translate="true">The store loads Google Analytics itself.</item>
+                <item name="mode.both" xsi:type="string" translate="true">Both</item>
+                <item name="mode.both.description" xsi:type="string" translate="true">Loads the container and gtag.js.</item>
+                <item name="connect.card" xsi:type="string" translate="true">Google connection</item>
+                <item name="connect.host_disclosure" xsi:type="string" translate="true">Using a first-party or server-side GTM domain?</item>
+                <item name="warning.double_count" xsi:type="string" translate="true">GA4 counts events twice if the container also has a GA4 tag for the same stream.</item>
+                <item name="field.enabled.help" xsi:type="string" translate="true">When No, the store outputs no Google script.</item>
+                <item name="field.script_host.help" xsi:type="string" translate="true">Host name only. Leave empty for Google’s standard host.</item>
+                <item name="field.item_id.help" xsi:type="string" translate="true">What GA4 receives as item_id.</item>
+                <item name="field.brand.help" xsi:type="string" translate="true">Fills item_brand.</item>
+                <item name="field.tax_catalog.help" xsi:type="string" translate="true">Yes: product and list prices are sent with tax.</item>
+                <item name="field.tax_cart.help" xsi:type="string" translate="true">Yes: cart, checkout and order prices are sent with tax.</item>
+                <item name="field.hidden_price.help" xsi:type="string" translate="true">For customer groups that may not see prices.</item>
+                <item name="field.purchase_value.help" xsi:type="string" translate="true">What GA4 reports as revenue.</item>
+                <item name="field.checkout_value.help" xsi:type="string" translate="true">Sent with the checkout steps.</item>
+                <item name="field.list_view.help" xsi:type="string" translate="true">Scrolls into view is more accurate for long pages.</item>
+                <item name="status.loader.ok" xsi:type="string" translate="true">Loader OK</item>
+                <item name="status.loader.ok.note" xsi:type="string" translate="true">Every storefront page at this scope loads it.</item>
+                <item name="status.loader.empty" xsi:type="string" translate="true">Waiting for an ID</item>
+                <item name="status.loader.empty.note" xsi:type="string" translate="true">Nothing is output yet.</item>
+                <item name="status.loader.invalid" xsi:type="string" translate="true">Invalid ID</item>
+                <item name="status.loader.invalid.note" xsi:type="string" translate="true">Nothing is output until it’s fixed.</item>
+                <item name="status.loader.off" xsi:type="string" translate="true">Sending is off</item>
+                <item name="status.loader.off.note" xsi:type="string" translate="true">No Google script is output.</item>
+                <item name="status.output" xsi:type="string" translate="true">What the store outputs</item>
+                <item name="status.tag_assistant" xsi:type="string" translate="true">Open Tag Assistant</item>
+                <item name="error.required" xsi:type="string" translate="true">Enter a value.</item>
+                <item name="error.format" xsi:type="string" translate="true">This value does not have the expected format.</item>
+                <item name="error.range" xsi:type="string" translate="true">This value is outside the allowed range.</item>
+                <item name="error.container_id.required" xsi:type="string" translate="true">Enter a container ID, or switch sending off.</item>
+                <item name="error.container_id.format" xsi:type="string" translate="true">Use the format GTM- followed by letters and digits, for example GTM-AB12CD3.</item>
+                <item name="error.measurement_id.required" xsi:type="string" translate="true">Enter a Measurement ID.</item>
+                <item name="error.measurement_id.format" xsi:type="string" translate="true">Use the format G- followed by letters and digits, for example G-7KQ2XM4P1N.</item>
+                <item name="error.script_host.format" xsi:type="string" translate="true">Host name only, for example gtm.example.com — no “https://” or path.</item>
+                <item name="track.events" xsi:type="string" translate="true">Events</item>
+                <item name="track.column.event" xsi:type="string" translate="true">Event</item>
+                <item name="track.column.trigger" xsi:type="string" translate="true">What triggers it</item>
+                <item name="track.column.source" xsi:type="string" translate="true">Where it comes from</item>
+                <item name="track.column.send" xsi:type="string" translate="true">Send</item>
+                <item name="track.column.channel" xsi:type="string" translate="true">Channel</item>
+                <item name="track.sent" xsi:type="string" translate="true">%1 of %2 sent</item>
+                <item name="track.from_server.one" xsi:type="string" translate="true">%1 from the server</item>
+                <item name="track.from_server.other" xsi:type="string" translate="true">%1 from the server</item>
+                <item name="track.group.count" xsi:type="string" translate="true">%1 of %2</item>
+                <item name="preset.custom" xsi:type="string" translate="true">Custom</item>
+                <item name="preset.custom.description" xsi:type="string" translate="true">Selected automatically: the table differs from every preset.</item>
+                <item name="preset.events.one" xsi:type="string" translate="true">%1 event</item>
+                <item name="preset.events.other" xsi:type="string" translate="true">%1 events</item>
+                <item name="channel.browser" xsi:type="string" translate="true">Browser</item>
+                <item name="channel.server" xsi:type="string" translate="true">Server</item>
+                <item name="channel.both" xsi:type="string" translate="true">Both</item>
+                <item name="channel.fixed.browser" xsi:type="string" translate="true">Browser · fixed</item>
+                <item name="channel.fixed.server" xsi:type="string" translate="true">Server · fixed</item>
+                <item name="channel.fixed.both" xsi:type="string" translate="true">Browser and server · fixed</item>
+                <item name="channel.fixed.browser.hint" xsi:type="string" translate="true">Only the browser can see this</item>
+                <item name="channel.fixed.server.hint" xsi:type="string" translate="true">Never happens in the shopper’s browser</item>
+                <item name="warning.both" xsi:type="string" translate="true">GA4 counts it twice when browser and server both send an event (%1). Use Both only if a server-side Tag Manager forwards it elsewhere.</item>
+                <item name="warning.server_off" xsi:type="string" translate="true">Events routed to the server go nowhere until server-side delivery is set up. Affected: %1</item>
+                <item name="products.card.items" xsi:type="string" translate="true">Product data</item>
+                <item name="products.card.prices" xsi:type="string" translate="true">Prices and tax</item>
+                <item name="products.card.values" xsi:type="string" translate="true">Purchase and checkout values</item>
+                <item name="preview.title.view_item" xsi:type="string" translate="true">This is what a product page sends</item>
+                <item name="preview.title.purchase" xsi:type="string" translate="true">This is what an order sends</item>
+                <item name="preview.tab.view_item" xsi:type="string" translate="true">Product page</item>
+                <item name="preview.tab.purchase" xsi:type="string" translate="true">Purchase</item>
+                <item name="preview.search" xsi:type="string" translate="true">Search a product by name or SKU</item>
+                <item name="preview.loading" xsi:type="string" translate="true">Loading preview…</item>
+                <item name="preview.viewer.visible" xsi:type="string" translate="true">Visitor sees prices</item>
+                <item name="preview.viewer.hidden" xsi:type="string" translate="true">Visitor may not see prices</item>
+                <item name="review.nothing.title" xsi:type="string" translate="true">Nothing to save</item>
+                <item name="review.nothing.text" xsi:type="string" translate="true">Every setting matches what is stored. Go back to a step to change something.</item>
+                <item name="review.changes" xsi:type="string" translate="true">Changes</item>
+                <item name="review.column.setting" xsi:type="string" translate="true">Setting</item>
+                <item name="review.column.current" xsi:type="string" translate="true">Current</item>
+                <item name="review.column.new" xsi:type="string" translate="true">New</item>
+                <item name="review.saved" xsi:type="string" translate="true">Saved</item>
+                <item name="review.failed" xsi:type="string" translate="true">Not saved</item>
+                <item name="changes.one" xsi:type="string" translate="true">%1 change</item>
+                <item name="changes.other" xsi:type="string" translate="true">%1 changes</item>
+                <item name="save.partial" xsi:type="string" translate="true">%1 of %2 changes were saved. %3 could not be saved — see the marked rows.</item>
+                <item name="success.text" xsi:type="string" translate="true">Saved as ordinary Magento settings. You can change them later in Advanced settings.</item>
+                <item name="checklist.title" xsi:type="string" translate="true">Next: publish your GTM container tags for these events</item>
+                <item name="checklist.tags.one" xsi:type="string" translate="true">Add a GA4 Event tag for the %1 event sent at %2</item>
+                <item name="checklist.tags.other" xsi:type="string" translate="true">Add a GA4 Event tag for each of the %1 events sent at %2</item>
+                <item name="checklist.preview" xsi:type="string" translate="true">Open GTM Preview on your storefront and place a test order</item>
+                <item name="checklist.publish" xsi:type="string" translate="true">Submit and publish the container</item>
+                <item name="checklist.open_preview" xsi:type="string" translate="true">Open GTM Preview</item>
+                <item name="request.expired" xsi:type="string" translate="true">Your admin session has ended. Sign in again in another tab, then retry; your changes are kept.</item>
+                <item name="request.forbidden" xsi:type="string" translate="true">Your role may not change these settings.</item>
+                <item name="request.timeout" xsi:type="string" translate="true">The store took too long to answer. Your changes are kept; try again.</item>
+                <item name="request.network" xsi:type="string" translate="true">The store could not be reached. Your changes are kept; try again.</item>
+                <item name="request.server" xsi:type="string" translate="true">The store could not complete the request. Your changes are kept; try again.</item>
+                <item name="wizard.breadcrumb" xsi:type="string" translate="true">Sales › GA4 Data Layer › Setup</item>
+                <item name="scope.label" xsi:type="string" translate="true">Scope</item>
+                <item name="stepper.label" xsi:type="string" translate="true">Setup steps</item>
+                <item name="stepper.progress" xsi:type="string" translate="true">Progress</item>
+                <item name="stepper.progress_count" xsi:type="string" translate="true">%1 of %2</item>
+                <item name="step.status.todo" xsi:type="string" translate="true">To do</item>
+                <item name="step.status.skipped" xsi:type="string" translate="true">Skipped</item>
+                <item name="switch.yes" xsi:type="string" translate="true">Yes</item>
+                <item name="switch.no" xsi:type="string" translate="true">No</item>
+                <item name="field.reach.default" xsi:type="string" translate="true">Default</item>
+                <item name="field.reach.website" xsi:type="string" translate="true">Website</item>
+                <item name="field.reach.store" xsi:type="string" translate="true">Store view</item>
+                <item name="origin.built_in" xsi:type="string" translate="true">Built-in default · used by every website</item>
+                <item name="origin.inherited_built_in" xsi:type="string" translate="true">Inherited from the built-in default</item>
+                <item name="origin.overridden.one" xsi:type="string" translate="true">Default · %2 overrides</item>
+                <item name="origin.overridden.other" xsi:type="string" translate="true">Default · %2 override</item>
+                <item name="secret.stored" xsi:type="string" translate="true">Stored encrypted</item>
+                <item name="secret.masked" xsi:type="string" translate="true">••••••••</item>
+                <item name="secret.replace" xsi:type="string" translate="true">Replace</item>
+                <item name="action.saving" xsi:type="string" translate="true">Saving…</item>
+                <item name="request.rejected" xsi:type="string" translate="true">The store refused the request. Your changes are kept.</item>
+                <item name="scope.cards.label" xsi:type="string" translate="true">Scope to configure</item>
+                <item name="scope.default.sub" xsi:type="string" translate="true">All websites and store views</item>
+                <item name="scope.website.sub.one" xsi:type="string" translate="true">%2 · %1 store view</item>
+                <item name="scope.website.sub.other" xsi:type="string" translate="true">%2 · %1 store views</item>
+                <item name="scope.website.views.one" xsi:type="string" translate="true">%1 store view</item>
+                <item name="scope.website.views.other" xsi:type="string" translate="true">%1 store views</item>
+                <item name="scope.store.kind" xsi:type="string" translate="true">Store view</item>
+                <item name="scope.tracking.on" xsi:type="string" translate="true">Tracking on</item>
+                <item name="scope.tracking.off" xsi:type="string" translate="true">Tracking off</item>
+                <item name="scope.no_container" xsi:type="string" translate="true">No container</item>
+                <item name="mode.recommended" xsi:type="string" translate="true">Recommended</item>
+                <item name="status.line.gtm" xsi:type="string" translate="true">GTM loader</item>
+                <item name="status.line.gtag" xsi:type="string" translate="true">gtag.js</item>
+                <item name="status.line.not_output" xsi:type="string" translate="true">not output</item>
+                <item name="summary.connect.off" xsi:type="string" translate="true">Not sending</item>
+                <item name="summary.connect.invalid" xsi:type="string" translate="true">ID needs fixing</item>
+                <item name="summary.connect.gtm" xsi:type="string" translate="true">%1 · loader OK</item>
+                <item name="summary.connect.gtag" xsi:type="string" translate="true">%2 · gtag.js</item>
+                <item name="summary.connect.both" xsi:type="string" translate="true">%1 + gtag.js</item>
+                <item name="summary.track.one" xsi:type="string" translate="true">%2 · %1 event</item>
+                <item name="summary.track.other" xsi:type="string" translate="true">%2 · %1 events</item>
+                <item name="track.presets" xsi:type="string" translate="true">Preset</item>
+                <item name="track.send_event" xsi:type="string" translate="true">Send %1</item>
+                <item name="track.channel_for" xsi:type="string" translate="true">Channel for %1</item>
+                <item name="preset.events_selected.one" xsi:type="string" translate="true">%1 event · selected</item>
+                <item name="preset.events_selected.other" xsi:type="string" translate="true">%1 events · selected</item>
+                <item name="channel.fixed.both.hint" xsi:type="string" translate="true">Always sent by both</item>
+                <item name="action.go_to_step" xsi:type="string" translate="true">Go to step %1</item>
+                <item name="review.group" xsi:type="string" translate="true">Step %1 · %2</item>
+                <item name="review.group.other" xsi:type="string" translate="true">Other settings</item>
+                <item name="review.empty" xsi:type="string" translate="true">Empty</item>
+                <item name="review.built_in" xsi:type="string" translate="true">Built-in default</item>
+                <item name="review.inherited_value" xsi:type="string" translate="true">%1: %2</item>
+                <item name="review.events" xsi:type="string" translate="true">%1 · %2 of %3</item>
+                <item name="review.secret" xsi:type="string" translate="true">•••••••• (encrypted)</item>
+                <item name="review.count" xsi:type="string" translate="true">%1 · %2</item>
+                <item name="review.scopes.one" xsi:type="string" translate="true">%1 scope</item>
+                <item name="review.scopes.other" xsi:type="string" translate="true">%1 scopes</item>
+                <item name="success.count.one" xsi:type="string" translate="true">%1 setting saved</item>
+                <item name="success.count.other" xsi:type="string" translate="true">%1 settings saved</item>
+                <item name="products.card.lists" xsi:type="string" translate="true">Product lists</item>
+                <item name="preview.tabs" xsi:type="string" translate="true">Event to preview</item>
+                <item name="preview.product" xsi:type="string" translate="true">Product</item>
+                <item name="preview.viewer" xsi:type="string" translate="true">Preview as</item>
+                <item name="preview.store.under" xsi:type="string" translate="true">Previewing %1, the first store view under this scope.</item>
+                <item name="preview.no_store" xsi:type="string" translate="true">This scope has no store view, so there is nothing to preview.</item>
+                <item name="preview.order.latest" xsi:type="string" translate="true">Built from the latest order of %1.</item>
+                <item name="preview.failed" xsi:type="string" translate="true">The preview could not be loaded. Change a setting or the product to try again.</item>
+                <item name="preview.search.empty" xsi:type="string" translate="true">No product matches.</item>
+                <item name="preview.search.failed" xsi:type="string" translate="true">The product search failed. Try typing again.</item>
+                <item name="preview.search.loading" xsi:type="string" translate="true">Searching…</item>
+                <item name="origin.source.built_in" xsi:type="string" translate="true">the built-in default</item>
+                <item name="origin.explain.inherited" xsi:type="string" translate="true">Inherited from %1, so it cannot be changed for %2 until you override it.</item>
+                <item name="track.explain.inherited" xsi:type="string" translate="true">Inherited from %1, so the events cannot be changed for %2 until you override them.</item>
+                <item name="connect.mode.blocked" xsi:type="string" translate="true">Choosing a mode changes %1, which cannot be changed at this scope.</item>
+                <item name="connect.placeholder.container_id" xsi:type="string" translate="true">GTM-XXXXXXX</item>
+                <item name="connect.placeholder.measurement_id" xsi:type="string" translate="true">G-XXXXXXXXXX</item>
+                <item name="action.retry" xsi:type="string" translate="true">Retry</item>
+                <item name="action.retrying" xsi:type="string" translate="true">Checking your session…</item>
+                <item name="secret.keep" xsi:type="string" translate="true">Keep the stored secret</item>
+                <item name="step.failed" xsi:type="string" translate="true">This step could not be shown. The other steps still work; reload the page to try again.</item>
+                <item name="review.discard" xsi:type="string" translate="true">Discard</item>
+                <item name="review.discard_row" xsi:type="string" translate="true">Discard the change of %1 at %2</item>
+                <item name="review.discard_all" xsi:type="string" translate="true">Discard all</item>
+                <item name="review.discard_all.confirm" xsi:type="string" translate="true">Discard every unsaved change?</item>
+                <item name="review.discard_all.yes" xsi:type="string" translate="true">Discard all changes</item>
+                <item name="review.discard_all.no" xsi:type="string" translate="true">Keep them</item>
+                <item name="review.blocked" xsi:type="string" translate="true">Fix these steps before saving:</item>
+                <item name="review.blocked.item" xsi:type="string" translate="true">%1 at %2</item>
+                <item name="review.separator" xsi:type="string" translate="true">·</item>
+            </argument>
+            <argument name="imports" xsi:type="array">
+                <item name="preact" xsi:type="string">Hryvinskyi_DataLayerAdminUi::js/setup/vendor/preact.js</item>
+                <item name="preact/hooks" xsi:type="string">Hryvinskyi_DataLayerAdminUi::js/setup/vendor/preact-hooks.js</item>
+                <item name="preact/jsx-runtime" xsi:type="string">Hryvinskyi_DataLayerAdminUi::js/setup/vendor/preact-jsx-runtime.js</item>
+                <item name="@hryvinskyi/datalayer-setup" xsi:type="string">Hryvinskyi_DataLayerAdminUi::js/setup/sdk.js</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Setup wizard: the event preview, built with unsaved settings drafted in an emulated store view, one kind of
+         event per item, and the product search it picks a product page with -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\EventPreviewInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\EventPreview"/>
+    <type name="Hryvinskyi\DataLayerAdminUi\Model\Setup\EventPreview">
+        <arguments>
+            <argument name="kinds" xsi:type="array">
+                <item name="view_item" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Preview\ViewItemPreview</item>
+                <item name="purchase" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Preview\PurchasePreview</item>
+            </argument>
+        </arguments>
+    </type>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\PreviewDraftInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\PreviewDraft"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\NotSentReasonInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Preview\NotSentReason"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\StoreViewEmulationInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\StoreViewEmulation"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Data\PreviewOutcomeInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Data\PreviewOutcome"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\ProductSearchInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\ProductSearch"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\StoreViewCheckInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\StoreViewCheck"/>
+
+    <!-- Setup wizard: saving its changes. Values are read once over the scope tree; the events setting has its own
+         reader and its own way of being saved; every registered setting is saved by its kind; each scope's changes
+         go through one configuration save -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Data\ScopeIdInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Data\ScopeId"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Data\ScopedValuesInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Data\ScopedValues"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\ScopedValuesReaderInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\ScopedValuesReader"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\EventsSettingStateInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\EventsSettingState"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SetupSaverInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SetupSaver"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\ConfigFieldPathInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\ConfigFieldPath"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\ConfigGroupsBuilderInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\ConfigGroupsBuilder"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SectionWriterInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\ConfigSectionWriter"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SettingFieldsPoolInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingFieldsPool"/>
+    <type name="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingFieldsPool">
+        <arguments>
+            <argument name="registered" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Fields\RegisteredSettingFields</argument>
+            <argument name="fields" xsi:type="array">
+                <item name="events" xsi:type="object">Hryvinskyi\DataLayerAdminUi\Model\Setup\Fields\EventsSettingFields</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Setup wizard: its page. The page configuration puts the contributions together, builds every admin address
+         the browser needs and opens at the scope the request names, and the session endpoint hands out a new session's
+         form key and addresses; each endpoint reads its request through its own reader and answers through one JSON
+         answer -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\MergedContributionsInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\MergedContributions"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SetupPageConfigInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SetupPageConfig"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SetupUrlsInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SetupUrls"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\InitialScopeInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\InitialScope"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SetupSessionInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SetupSession"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Http\JsonAnswerInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Http\JsonAnswer"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Http\JsonBodyInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Http\JsonBody"/>
+    <type name="Hryvinskyi\DataLayerAdminUi\Model\Setup\Http\JsonBody">
+        <arguments>
+            <argument name="serializer" xsi:type="object">Magento\Framework\Serialize\Serializer\Json</argument>
+        </arguments>
+    </type>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Http\StoreViewParameterInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Http\StoreViewParameter"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Http\SaveRequestReaderInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Http\SaveRequestReader"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Http\PreviewRequestReaderInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Http\PreviewRequestReader"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\Http\ProductSearchRequestReaderInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Http\ProductSearchRequestReader"/>
+
+    <!-- The setup page prints its configuration inside a script element, so the JSON escapes every character that
+         could end it -->
+    <type name="Hryvinskyi\DataLayerAdminUi\ViewModel\SetupPage">
+        <arguments>
+            <argument name="json" xsi:type="object">Magento\Framework\Serialize\Serializer\JsonHexTag</argument>
+        </arguments>
+    </type>
+
+    <!-- The configuration page's field stored under a config path, found one way by everything the wizard reads
+         from the page -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\ConfigFieldLookupInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\ConfigFieldLookup"/>
+
+    <!-- A setting another module adds from another section of the configuration page is shown and saved only for a
+         user that section's access rule allows -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\SettingAccessInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\SettingAccess"/>
+
+    <!-- A preview's event goes through the store's event modifiers, as a page's events do -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Setup\PreviewEventModifiersInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Setup\Preview\PreviewEventModifiers"/>
+
+    <!-- The events table's rows, and the address of a group of the configuration page -->
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\EventsTable\EventsTableBuilderInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\EventsTable\EventsTableBuilder"/>
+    <preference for="Hryvinskyi\DataLayerAdminUi\Api\Form\SettingsGroupLinkInterface"
+                type="Hryvinskyi\DataLayerAdminUi\Model\Form\SettingsGroupLink"/>
+
+    <!-- Attributes that can identify an item: text-like values, or the product id -->
+    <virtualType name="HryvinskyiDataLayerIdentifierAttributes"
+                 type="Hryvinskyi\DataLayerAdminUi\Model\Config\Source\ProductAttributes">
+        <arguments>
+            <argument name="field" xsi:type="string">backend_type</argument>
+            <argument name="values" xsi:type="array">
+                <item name="varchar" xsi:type="string">varchar</item>
+                <item name="text" xsi:type="string">text</item>
+                <item name="static" xsi:type="string">static</item>
+            </argument>
+            <argument name="leadingOptions" xsi:type="array">
+                <item name="product_id" xsi:type="array">
+                    <item name="value" xsi:type="string">entity_id</item>
+                    <item name="label" xsi:type="string" translate="true">Product ID</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- Attributes that can name a brand: a choice from a list of options, or none -->
+    <virtualType name="HryvinskyiDataLayerBrandAttributes"
+                 type="Hryvinskyi\DataLayerAdminUi\Model\Config\Source\ProductAttributes">
+        <arguments>
+            <argument name="field" xsi:type="string">frontend_input</argument>
+            <argument name="values" xsi:type="array">
+                <item name="select" xsi:type="string">select</item>
+                <item name="multiselect" xsi:type="string">multiselect</item>
+            </argument>
+            <argument name="leadingOptions" xsi:type="array">
+                <item name="none" xsi:type="array">
+                    <item name="value" xsi:type="string"/>
+                    <item name="label" xsi:type="string" translate="true">— Not sent —</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+</config>

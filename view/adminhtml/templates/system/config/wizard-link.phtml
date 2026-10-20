@@ -1,0 +1,17 @@
+<?php
+/**
+ * Copyright (c) 2026. Volodymyr Hryvinskyi. All rights reserved.
+ * Author: Volodymyr Hryvinskyi <volodymyr@hryvinskyi.com>
+ * GitHub: https://github.com/hryvinskyi
+ */
+
+/**
+ * A secondary link button that opens the setup wizard
+ *
+ * @var \Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\SetupWizardLink $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var array{id: string, url: string} $view What the block assigned for the field being rendered
+ */
+?>
+<a class="action-secondary" id="<?= $escaper->escapeHtmlAttr($view['id']) ?>" data-role="setup-wizard-link"
+   href="<?= $escaper->escapeUrl($view['url']) ?>"><?= $escaper->escapeHtml(__('Open setup wizard')) ?></a>

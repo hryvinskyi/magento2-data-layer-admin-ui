@@ -1,0 +1,229 @@
+<?php
+/**
+ * Copyright (c) 2026. Volodymyr Hryvinskyi. All rights reserved.
+ * Author: Volodymyr Hryvinskyi <volodymyr@hryvinskyi.com>
+ * GitHub: https://github.com/hryvinskyi
+ */
+
+/**
+ * The events table: one row per known event with a Send switch and a channel, the counter, the warnings, and the
+ * inputs that post the two settings the table saves
+ *
+ * The table is a grid of `div`s carrying the table roles, so the settings form's own table rules cannot reach its
+ * cells. Each Send switch is a native checkbox, kept for the keyboard, the label and assistive technology but drawn
+ * by a separate track beside it, so the admin's checkbox styles never show over the switch.
+ *
+ * The switches and selects carry no name: the script turns them into the posted inputs. The posted inputs start as
+ * the stored values, so a page whose script does not run saves what was there. The JSON configuration is written by
+ * the block through a serializer that escapes `<` and `>`, so it cannot close its script tag.
+ *
+ * @var \Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\EventsTable $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var array<string, mixed> $view What the block assigned for the field being rendered
+ */
+
+$view = isset($view) && is_array($view) ? $view : [];
+$names = is_array($view['names'] ?? null) ? $view['names'] : [];
+$stored = is_array($view['stored'] ?? null) ? $view['stored'] : [];
+$channels = is_array($view['channels'] ?? null) ? $view['channels'] : [];
+$groups = is_array($view['groups'] ?? null) ? $view['groups'] : [];
+$readonly = !empty($view['readonly']);
+$inherited = !empty($view['inherited']);
+$locked = $readonly || $inherited;
+$disabledAttribute = $locked ? 'disabled="disabled"' : '';
+$labelId = (string) ($view['id'] ?? '') . '-label';
+$fixedTitles = [
+    'browser' => __('Only the shopper\'s browser can send it'),
+    'server' => __('Never happens in the shopper\'s browser'),
+    'both' => __('Always sent by both'),
+];
+$sourceTitles = [
+    'browser' => __('Detected in the shopper\'s browser'),
+    'server' => __('Detected by the store, never posted by a browser'),
+];
+?>
+<div class="hryvinskyi-datalayer-events<?= $inherited ? ' is-inherited' : '' ?>"
+     id="<?= $escaper->escapeHtmlAttr((string) ($view['id'] ?? '')) ?>"
+     data-hryvinskyi-datalayer-events-table="1"
+     <?= $readonly ? 'data-readonly="1"' : '' ?>>
+    <div class="hryvinskyi-datalayer-events__head">
+        <div class="hryvinskyi-datalayer-events__title">
+            <span class="hryvinskyi-datalayer-events__label" id="<?= $escaper->escapeHtmlAttr($labelId) ?>">
+                <?= $escaper->escapeHtml((string) ($view['label'] ?? '')) ?>
+            </span>
+            <span class="hryvinskyi-datalayer-events__scope">
+                <?= $escaper->escapeHtml((string) ($view['scopeLabel'] ?? '')) ?>
+            </span>
+        </div>
+        <div class="hryvinskyi-datalayer-events__tools">
+            <?php if (!empty($view['inheritShown'])): ?>
+                <label class="hryvinskyi-datalayer-events__inherit">
+                    <input type="checkbox" value="1" data-role="inherit"
+                           name="<?= $escaper->escapeHtmlAttr((string) ($names['disabledInherit'] ?? '')) ?>"
+                           <?= $inherited ? 'checked="checked"' : '' ?>
+                           <?= $readonly ? 'disabled="disabled"' : '' ?>/>
+                    <span><?= $escaper->escapeHtml((string) ($view['inheritLabel'] ?? '')) ?></span>
+                </label>
+                <?php if (($names['routingInherit'] ?? '') !== ''): ?>
+                    <input type="hidden" value="1" data-role="routing-inherit"
+                           name="<?= $escaper->escapeHtmlAttr((string) $names['routingInherit']) ?>"
+                           <?= $inherited && !$readonly ? '' : 'disabled="disabled"' ?>/>
+                <?php endif; ?>
+            <?php endif; ?>
+            <span class="hryvinskyi-datalayer-events__counter" data-role="counter" aria-live="polite"></span>
+        </div>
+    </div>
+    <div class="hryvinskyi-datalayer-events__scroll">
+        <div class="hryvinskyi-datalayer-events__table" role="table" data-role="table"
+             aria-labelledby="<?= $escaper->escapeHtmlAttr($labelId) ?>">
+            <div class="hryvinskyi-datalayer-events__header" role="rowgroup">
+                <div class="hryvinskyi-datalayer-events__row hryvinskyi-datalayer-events__row--header" role="row">
+                    <div class="hryvinskyi-datalayer-events__cell" role="columnheader">
+                        <?= $escaper->escapeHtml(__('Event')) ?>
+                    </div>
+                    <div class="hryvinskyi-datalayer-events__cell" role="columnheader">
+                        <?= $escaper->escapeHtml(__('What triggers it')) ?>
+                    </div>
+                    <div class="hryvinskyi-datalayer-events__cell" role="columnheader">
+                        <?= $escaper->escapeHtml(__('Where it comes from')) ?>
+                    </div>
+                    <div class="hryvinskyi-datalayer-events__cell" role="columnheader">
+                        <?= $escaper->escapeHtml(__('Send')) ?>
+                    </div>
+                    <div class="hryvinskyi-datalayer-events__cell" role="columnheader">
+                        <?= $escaper->escapeHtml(__('Channel')) ?>
+                    </div>
+                </div>
+            </div>
+            <?php foreach ($groups as $group): ?>
+                <div class="hryvinskyi-datalayer-events__group" role="rowgroup">
+                    <div class="hryvinskyi-datalayer-events__group-row" role="row">
+                        <div class="hryvinskyi-datalayer-events__group-label" role="rowheader" aria-colspan="5">
+                            <?= $escaper->escapeHtml((string) $group['label']) ?>
+                        </div>
+                    </div>
+                    <?php foreach ($group['rows'] as $row): ?>
+                        <?php $event = (string) $row['event']; ?>
+                        <div class="hryvinskyi-datalayer-events__row<?= $row['send'] ? '' : ' is-off' ?>" role="row"
+                             data-role="event" data-event="<?= $escaper->escapeHtmlAttr($event) ?>">
+                            <div class="hryvinskyi-datalayer-events__cell hryvinskyi-datalayer-events__code" role="cell"
+                                 title="<?= $escaper->escapeHtmlAttr((string) $row['label']) ?>">
+                                <code><?= $escaper->escapeHtml($event) ?></code>
+                            </div>
+                            <div class="hryvinskyi-datalayer-events__cell hryvinskyi-datalayer-events__trigger"
+                                 role="cell">
+                                <span><?= $escaper->escapeHtml((string) $row['trigger']) ?></span>
+                                <?php if ((string) $row['hint'] !== ''): ?>
+                                    <span class="hryvinskyi-datalayer-events__hint">
+                                        <?= $escaper->escapeHtml((string) $row['hint']) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="hryvinskyi-datalayer-events__cell" role="cell">
+                                <?php if ((string) $row['source'] !== ''): ?>
+                                    <?php
+                                    $sourceTitle = $sourceTitles[!empty($row['browser']) ? 'browser' : 'server'];
+                                    ?>
+                                    <span class="hryvinskyi-datalayer-events__badge"
+                                          title="<?= $escaper->escapeHtmlAttr($sourceTitle) ?>">
+                                        <?= $escaper->escapeHtml((string) $row['source']) ?>
+                                    </span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="hryvinskyi-datalayer-events__cell" role="cell">
+                                <label class="hryvinskyi-datalayer-switch">
+                                    <input type="checkbox" role="switch" class="hryvinskyi-datalayer-switch__input"
+                                           data-role="send" data-event="<?= $escaper->escapeHtmlAttr($event) ?>"
+                                           aria-label="<?= $escaper->escapeHtmlAttr(__('Send %1', $event)) ?>"
+                                           <?= $row['send'] ? 'checked="checked"' : '' ?>
+                                           <?= /* @noEscape */ $disabledAttribute ?>/>
+                                    <span class="hryvinskyi-datalayer-switch__track" aria-hidden="true">
+                                        <span class="hryvinskyi-datalayer-switch__knob"></span>
+                                    </span>
+                                    <span class="hryvinskyi-datalayer-switch__text" data-role="send-text">
+                                        <?= $escaper->escapeHtml($row['send'] ? __('Yes') : __('No')) ?>
+                                    </span>
+                                </label>
+                            </div>
+                            <div class="hryvinskyi-datalayer-events__cell" role="cell">
+                                <?php if ($row['fixed']): ?>
+                                    <?php
+                                    $fixedChannel = (string) $row['channel'];
+                                    $fixedTitle = (string) ($fixedTitles[$fixedChannel] ?? '');
+                                    $fixedLabel = __('%1 · fixed', $channels[$fixedChannel] ?? $fixedChannel);
+                                    ?>
+                                    <span class="hryvinskyi-datalayer-events__fixed"
+                                          title="<?= $escaper->escapeHtmlAttr($fixedTitle) ?>">
+                                        <?= $escaper->escapeHtml($fixedLabel) ?>
+                                    </span>
+                                <?php else: ?>
+                                    <select class="hryvinskyi-datalayer-events__channel" data-role="channel"
+                                            data-event="<?= $escaper->escapeHtmlAttr($event) ?>"
+                                            aria-label="<?= $escaper->escapeHtmlAttr(__('Channel of %1', $event)) ?>"
+                                            <?= $locked || !$row['send'] ? 'disabled="disabled"' : '' ?>>
+                                        <?php foreach ($channels as $value => $channelLabel): ?>
+                                            <?php $selected = (string) $value === (string) $row['channel']; ?>
+                                            <option value="<?= $escaper->escapeHtmlAttr((string) $value) ?>"
+                                                <?= $selected ? 'selected="selected"' : '' ?>>
+                                                <?= $escaper->escapeHtml((string) $channelLabel) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <div class="hryvinskyi-datalayer-notice hryvinskyi-datalayer-notice--compact" role="note"
+         data-role="warning-both" hidden>
+        <span class="hryvinskyi-datalayer-notice__icon" aria-hidden="true">!</span>
+        <span class="hryvinskyi-datalayer-notice__text">
+            <?= $escaper->escapeHtml(__(
+                'GA4 counts an event twice when both the browser and the server send it. '
+                . 'Use Both only for a server-side Tag Manager that forwards to other platforms.'
+            )) ?>
+        </span>
+    </div>
+    <div class="hryvinskyi-datalayer-notice hryvinskyi-datalayer-notice--compact" role="note"
+         data-role="warning-server" hidden>
+        <span class="hryvinskyi-datalayer-notice__icon" aria-hidden="true">!</span>
+        <span class="hryvinskyi-datalayer-notice__text">
+            <?= $escaper->escapeHtml(
+                __('Server routes do nothing until Server-side tracking is enabled for this website.')
+            ) ?>
+            <?php if ((string) ($view['serverSettingsUrl'] ?? '') !== ''): ?>
+                <a href="<?= $escaper->escapeUrl((string) $view['serverSettingsUrl']) ?>">
+                    <?= $escaper->escapeHtml(__('Open the server-side settings')) ?>
+                </a>
+            <?php endif; ?>
+        </span>
+    </div>
+    <?php if ((string) ($view['comment'] ?? '') !== ''): ?>
+        <p class="hryvinskyi-datalayer-events__comment"><?= $escaper->escapeHtml((string) $view['comment']) ?></p>
+    <?php endif; ?>
+    <div data-role="stored">
+        <input type="hidden"
+               name="<?= $escaper->escapeHtmlAttr((string) ($names['disabled'] ?? '')) ?>"
+               value="<?= $escaper->escapeHtmlAttr(implode(',', $stored['disabled'] ?? [])) ?>"
+               <?= /* @noEscape */ $disabledAttribute ?>/>
+        <?php if (($names['routing'] ?? '') !== ''): ?>
+            <?php $routingName = (string) $names['routing']; ?>
+            <input type="hidden" name="<?= $escaper->escapeHtmlAttr($routingName . '[__empty]') ?>" value=""
+                <?= /* @noEscape */ $disabledAttribute ?>/>
+            <?php foreach (array_values($stored['routing'] ?? []) as $index => $routingRow): ?>
+                <input type="hidden" name="<?= $escaper->escapeHtmlAttr($routingName . '[_' . $index . '][event]') ?>"
+                       value="<?= $escaper->escapeHtmlAttr((string) $routingRow['event']) ?>"
+                    <?= /* @noEscape */ $disabledAttribute ?>/>
+                <input type="hidden" name="<?= $escaper->escapeHtmlAttr($routingName . '[_' . $index . '][channel]') ?>"
+                       value="<?= $escaper->escapeHtmlAttr((string) $routingRow['channel']) ?>"
+                    <?= /* @noEscape */ $disabledAttribute ?>/>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+    <script type="application/json"
+            data-role="config"><?= /* @noEscape */ (string) ($view['config'] ?? '{}') ?></script>
+</div>
+<?= /* @noEscape */ (string) ($view['script'] ?? '') ?>

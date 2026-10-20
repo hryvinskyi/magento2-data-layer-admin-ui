@@ -1,0 +1,34 @@
+{
+    "name": "hryvinskyi/magento2-data-layer-admin-ui",
+    "description": "Admin surface of the GA4 data layer: its configuration section in the Sales tab, the access rule that guards it, the events table and the other field renderers, option lists, validation rules and validated settings.",
+    "type": "magento2-module",
+    "version": "1.0.0",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Volodymyr Hryvinskyi",
+            "email": "volodymyr@hryvinskyi.com"
+        }
+    ],
+    "require": {
+        "php": "~8.3.0||~8.4.0",
+        "hryvinskyi/magento2-data-layer-api": "^1.0",
+        "hryvinskyi/magento2-data-layer": "^1.0",
+        "hryvinskyi/magento2-theme-assets": "^1.0.1",
+        "laminas/laminas-uri": "^2.9",
+        "magento/framework": "*",
+        "magento/module-backend": "*",
+        "magento/module-catalog": "*",
+        "magento/module-config": "*",
+        "magento/module-sales": "*",
+        "magento/module-store": "*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Hryvinskyi\\DataLayerAdminUi\\": ""
+        }
+    }
+}

@@ -1,0 +1,32 @@
+<?php
+/**
+ * Copyright (c) 2026. Volodymyr Hryvinskyi. All rights reserved.
+ * Author: Volodymyr Hryvinskyi <volodymyr@hryvinskyi.com>
+ * GitHub: https://github.com/hryvinskyi
+ */
+
+/**
+ * A read-only status: the dot and the status on one line, the link under it, the note after it
+ *
+ * @var \Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\StatusField $block
+ * @var \Magento\Framework\Escaper $escaper
+ * @var array{id: string, tone: string, text: string, code: bool, linkUrl: string, linkLabel: string,
+ *     note: string} $view What the block assigned for the field being rendered
+ */
+
+$textClass = 'hryvinskyi-datalayer-status__text' . ($view['code'] ? ' hryvinskyi-datalayer-status__text--code' : '');
+?>
+<div class="hryvinskyi-datalayer-status hryvinskyi-datalayer-status--<?= $escaper->escapeHtmlAttr($view['tone']) ?>"
+     id="<?= $escaper->escapeHtmlAttr($view['id']) ?>" data-role="status">
+    <div class="hryvinskyi-datalayer-status__line">
+        <span class="hryvinskyi-datalayer-status__dot" aria-hidden="true"></span>
+        <span class="<?= /* @noEscape */ $textClass ?>"><?= $escaper->escapeHtml($view['text']) ?></span>
+    </div>
+    <?php if ($view['linkUrl'] !== ''): ?>
+        <a class="hryvinskyi-datalayer-status__link" href="<?= $escaper->escapeUrl($view['linkUrl']) ?>"
+           target="_blank" rel="noopener noreferrer"><?= $escaper->escapeHtml($view['linkLabel']) ?></a>
+    <?php endif; ?>
+</div>
+<?php if ($view['note'] !== ''): ?>
+    <p class="note"><span><?= $escaper->escapeHtml($view['note']) ?></span></p>
+<?php endif; ?>

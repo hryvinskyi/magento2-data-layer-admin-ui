@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright (c) 2026. Volodymyr Hryvinskyi. All rights reserved.
+ * Author: Volodymyr Hryvinskyi <volodymyr@hryvinskyi.com>
+ * GitHub: https://github.com/hryvinskyi
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <!-- One section for every setting of the data layer: the modules that extend it add their own groups -->
+        <section id="hryvinskyi_datalayer" translate="label" sortOrder="345" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <label>GA4 Data Layer</label>
+            <tab>sales</tab>
+            <resource>Hryvinskyi_DataLayerAdminUi::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>General</label>
+                <!-- A link to the guided setup of these settings, opened at the scope shown; it stores nothing -->
+                <field id="wizard_link" translate="label comment" sortOrder="1" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Setup wizard</label>
+                    <comment>Set up the data layer step by step. It saves the same settings as this page.</comment>
+                    <frontend_model>Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\SetupWizardLink</frontend_model>
+                </field>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enabled</label>
+                    <comment>When No, nothing renders: no GTM loader and no events are sent to GA4.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="gtm" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Tag Manager</label>
+                <field id="container_id" translate="label comment" type="text" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Container ID</label>
+                    <comment>One container per website. Leave empty to output no GTM loader.</comment>
+                    <validate>validate-hryvinskyi-gtm-container-id</validate>
+                    <backend_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Backend\ContainerId</backend_model>
+                </field>
+                <field id="script_host" translate="label comment" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Script host</label>
+                    <comment>Change only for a first-party or server-side GTM (for example a custom domain of your server container). Host name only.</comment>
+                    <validate>validate-hryvinskyi-host-name</validate>
+                    <backend_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Backend\ScriptHost</backend_model>
+                </field>
+                <field id="loader_status" translate="label comment" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Loader status</label>
+                    <comment>Read-only. The GTM script URL this scope outputs, with a link to test it in Tag Assistant.</comment>
+                    <frontend_model>Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\LoaderStatus</frontend_model>
+                </field>
+            </group>
+            <group id="gtag" translate="label" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Analytics (gtag.js)</label>
+                <field id="measurement_id" translate="label comment" type="text" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Measurement ID</label>
+                    <comment>Loads gtag.js and sends every event to this GA4 web data stream, without Tag Manager. Leave empty to load no gtag.js.</comment>
+                    <validate>validate-hryvinskyi-measurement-id</validate>
+                    <backend_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Backend\MeasurementId</backend_model>
+                </field>
+                <field id="double_count_warning" translate="comment" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <comment>This scope loads both a GTM container and gtag.js. If the container has a GA4 tag for the same web data stream, GA4 counts every event twice: keep only one of them.</comment>
+                    <frontend_model>Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\DoubleCountWarning</frontend_model>
+                </field>
+            </group>
+            <group id="events" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Events</label>
+                <field id="disabled" translate="label comment" type="text" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Events sent to GA4</label>
+                    <comment>Send off: the event is not sent to GA4. Channel: Browser pushes it to dataLayer for GTM, Server sends it from Magento, Both does both. Events added later by extensions appear here switched on.</comment>
+                    <frontend_model>Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\EventsTable</frontend_model>
+                    <backend_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Backend\DisabledEvents</backend_model>
+                </field>
+                <!-- Saved through the events table above, which posts it and follows its "use the parent scope's
+                     value" state; the setting keeps its own path -->
+                <field id="routing" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Event routing</label>
+                    <config_path>hryvinskyi_datalayer/channels/routing</config_path>
+                    <frontend_model>Hryvinskyi\DataLayerAdminUi\Block\Adminhtml\System\Config\HiddenField</frontend_model>
+                    <backend_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Backend\ChannelRoutingRows</backend_model>
+                </field>
+            </group>
+            <group id="item" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Items</label>
+                <field id="identifier_attribute" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Item ID attribute</label>
+                    <comment>What GA4 receives as item_id.</comment>
+                    <source_model>HryvinskyiDataLayerIdentifierAttributes</source_model>
+                </field>
+                <field id="brand_attribute" translate="label comment" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Brand attribute</label>
+                    <comment>Fills item_brand.</comment>
+                    <source_model>HryvinskyiDataLayerBrandAttributes</source_model>
+                </field>
+                <field id="hidden_price_handling" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>When a price is hidden from the visitor</label>
+                    <comment>Applies to browsing and cart events when the visitor may not see a product’s price. Without prices, GA4 receives the items but no value. Orders, refunds and Ads conversions always carry their value.</comment>
+                    <source_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Source\HiddenPriceHandlingOptions</source_model>
+                </field>
+                <field id="catalogue_price_includes_tax" translate="label comment" type="select" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Catalogue prices include tax</label>
+                    <comment>Yes sends product prices including tax in view_item, product lists, promotions and add_to_wishlist, even when the store shows prices excluding tax.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="line_price_includes_tax" translate="label comment" type="select" sortOrder="50"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Cart and order prices include tax</label>
+                    <comment>Yes sends item prices and discounts including tax in cart events, checkout steps, purchase and refund. Purchase value follows Order value and Deduct tax.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <!-- Checkout steps: what add_shipping_info and add_payment_info report as their value -->
+            <group id="checkout" translate="label" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Checkout steps</label>
+                <field id="step_value_basis" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Checkout step value</label>
+                    <comment>The value of add_shipping_info and add_payment_info. Items value matches the other cart events: item prices less discounts, without shipping. Cart grand total includes tax and shipping, net of discounts.</comment>
+                    <source_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Source\CheckoutStepValueBasisOptions</source_model>
+                </field>
+            </group>
+            <group id="purchase" translate="label comment" sortOrder="50" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Purchase</label>
+                <comment>What GA4 reports as revenue for the purchase event.</comment>
+                <field id="value_basis" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Order value</label>
+                    <comment>Which order total GA4 reports as revenue (value). Both are net of discounts: Subtotal has the order’s discount taken off.</comment>
+                    <source_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Source\ValueBasisOptions</source_model>
+                </field>
+                <field id="deduct_tax" translate="label comment" type="select" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Deduct tax from the grand total</label>
+                    <comment>Yes reports revenue excluding tax.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="value_basis">grand_total</field>
+                    </depends>
+                </field>
+                <field id="include_tax" translate="label comment" type="select" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Send tax</label>
+                    <comment>Fills tax in the purchase event.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="include_shipping" translate="label comment" type="select" sortOrder="40" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Send shipping</label>
+                    <comment>Fills shipping in the purchase event.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="ads" translate="label" sortOrder="55" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Google Ads conversion</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Enabled</label>
+                    <comment>Sends ads_conversion right after purchase on the success page. With gtag.js loaded (a Measurement ID above, or no GTM container), it goes to Google Ads directly; otherwise a Google Ads conversion tag in your GTM container fires on it.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="conversion_id" translate="label comment" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Conversion ID</label>
+                    <comment>The Google Ads account, for example AW-123456789.</comment>
+                    <validate>validate-hryvinskyi-ads-conversion-id</validate>
+                    <backend_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Backend\AdsConversionId</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="conversion_label" translate="label comment" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Conversion label</label>
+                    <comment>The conversion action’s label: the part after the slash in its send_to.</comment>
+                    <validate>validate-hryvinskyi-ads-conversion-label</validate>
+                    <backend_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Backend\AdsConversionLabel</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="value_source" translate="label comment" type="select" sortOrder="40" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Conversion value</label>
+                    <comment>Purchase value reports the same value and currency as the purchase event.</comment>
+                    <source_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Source\AdsValueSourceOptions</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="fixed_value" translate="label comment" type="text" sortOrder="50" showInDefault="1"
+                       showInWebsite="1" showInStore="1">
+                    <label>Fixed value</label>
+                    <comment>Sent for every order, in the order’s currency.</comment>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                    <backend_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Backend\AdsFixedValue</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="value_source">fixed</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="lists" translate="label" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product lists</label>
+                <field id="impression_trigger" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Count a list as viewed</label>
+                    <comment>Controls when view_item_list and view_promotion fire. “When the list scrolls into view” is more accurate for long pages and carousels.</comment>
+                    <source_model>Hryvinskyi\DataLayerAdminUi\Model\Config\Source\ImpressionTriggerOptions</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
