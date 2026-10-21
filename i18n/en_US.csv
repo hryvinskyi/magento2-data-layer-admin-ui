@@ -33,7 +33,7 @@
 "Event routing","Event routing"
 "Events","Events"
 "Events sent to GA4","Events sent to GA4"
-"Fills item_brand.","Fills item_brand."
+"Fills item_brand: the option label of a dropdown or multiselect, the text of a text attribute.","Fills item_brand: the option label of a dropdown or multiselect, the text of a text attribute."
 "Fills shipping in the purchase event.","Fills shipping in the purchase event."
 "Fills tax in the purchase event.","Fills tax in the purchase event."
 "Fixed value","Fixed value"

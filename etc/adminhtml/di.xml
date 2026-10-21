@@ -556,6 +556,7 @@
         <arguments>
             <argument name="field" xsi:type="string">frontend_input</argument>
             <argument name="values" xsi:type="array">
+                <item name="text" xsi:type="string">text</item>
                 <item name="select" xsi:type="string">select</item>
                 <item name="multiselect" xsi:type="string">multiselect</item>
             </argument>

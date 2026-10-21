@@ -100,7 +100,7 @@
                 <field id="brand_attribute" translate="label comment" type="select" sortOrder="20"
                        showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Brand attribute</label>
-                    <comment>Fills item_brand.</comment>
+                    <comment>Fills item_brand: the option label of a dropdown or multiselect, the text of a text attribute.</comment>
                     <source_model>HryvinskyiDataLayerBrandAttributes</source_model>
                 </field>
                 <field id="hidden_price_handling" translate="label comment" type="select" sortOrder="30"
