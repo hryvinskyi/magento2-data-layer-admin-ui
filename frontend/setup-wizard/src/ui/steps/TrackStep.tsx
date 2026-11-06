@@ -270,7 +270,7 @@ function EventsTable({ events }: { readonly events: EventsSettingBinding }): JSX
         <div class="hdl-setup-table hdl-setup-events">
             <div class="hdl-setup-table__head">
                 <div class="hdl-setup-table__title">
-                    <span class="hdl-setup-card__tile"><Icon name="checklist" size={20} /></span>
+                    <span class="hui-card__tile"><Icon name="checklist" size={20} /></span>
                     <h3>{t('track.events')}</h3>
                     {events.editable ? <OriginLine origin={events.origin} onInherit={events.inherit} /> : null}
                 </div>

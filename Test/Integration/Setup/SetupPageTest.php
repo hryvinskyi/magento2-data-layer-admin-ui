@@ -15,6 +15,7 @@ use Magento\Backend\Model\Menu\Config as MenuConfig;
 use Magento\Backend\Model\Menu\Item;
 use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\App\Response\Http as HttpResponse;
+use Magento\Framework\View\Asset\Repository as AssetRepository;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
 
@@ -22,6 +23,9 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
  * The setup wizard's page, rendered by the real admin for a signed-in administrator: the menu item leads to it, the
  * settings' access rule guards it, and it prints the wizard's root, its loading line, a page configuration the browser
  * code can read, the import map and the entry module
+ *
+ * The wizard is drawn by the shared admin UI kit: the root is a kit root, and the kit's stylesheet is linked before
+ * the wizard's own, because the wizard's frame rules override kit parts of the same weight by coming later.
  *
  * The configuration is checked the way the browser's parser reads it: every endpoint an address, an address to leave
  * to for every scope, a form key and a locale, wording as text keyed by text, plugins with unique ids, an initial scope
@@ -62,7 +66,9 @@ class SetupPageTest extends AbstractBackendController
 
         $roots = $this->elements($xpath, '//div[@data-role="hdl-setup"]');
         self::assertCount(1, $roots);
-        self::assertStringContainsString('hdl-setup', $roots[0]->getAttribute('class'));
+        $classes = preg_split('/\s+/', trim($roots[0]->getAttribute('class'))) ?: [];
+        self::assertContains('hdl-setup', $classes);
+        self::assertContains('hui', $classes, 'a kit root, so the loading line has the kit\'s typeface and colours');
         self::assertNotSame('', trim($roots[0]->getAttribute('data-failed-text')));
         $loading = $this->elements($xpath, '//div[@data-role="hdl-setup"]//*[@data-role="hdl-setup-loading"]');
         self::assertCount(1, $loading);
@@ -84,6 +90,38 @@ class SetupPageTest extends AbstractBackendController
         }
         $entries = $this->elements($xpath, '//script[@type="module"][contains(@src, "/js/setup/wizard")]');
         self::assertCount(1, $entries);
+    }
+
+    /**
+     * The head links the admin UI kit's stylesheet before the wizard's: the wizard's frame rules override kit parts of
+     * the same weight by that order alone
+     *
+     * @return void
+     */
+    public function testLinksTheKitStylesheetBeforeTheWizards(): void
+    {
+        $hrefs = array_map(
+            static fn (\DOMElement $link): string => $link->getAttribute('href'),
+            $this->elements($this->page(), '//head/link[@rel="stylesheet"]')
+        );
+
+        $kit = $this->position($hrefs, '/Hryvinskyi_AdminUi/css/admin-ui.css');
+        $wizard = $this->position($hrefs, '/Hryvinskyi_DataLayerAdminUi/css/setup-wizard.css');
+
+        self::assertLessThan($wizard, $kit, 'the kit stylesheet is linked before the wizard\'s');
+    }
+
+    /**
+     * Magento finds the source file of the kit stylesheet the page links, so the link does not point at nothing
+     *
+     * @return void
+     */
+    public function testResolvesTheKitStylesheet(): void
+    {
+        $asset = $this->service(AssetRepository::class)
+            ->createAsset('Hryvinskyi_AdminUi::css/admin-ui.css', ['area' => 'adminhtml']);
+
+        self::assertFileExists($asset->getSourceFile());
     }
 
     /**
@@ -211,6 +249,24 @@ class SetupPageTest extends AbstractBackendController
         libxml_use_internal_errors($errors);
 
         return new \DOMXPath($document);
+    }
+
+    /**
+     * Find where the first address that holds a path stands in a list of addresses
+     *
+     * @param list<string> $hrefs
+     * @param string $path
+     * @return int
+     */
+    private function position(array $hrefs, string $path): int
+    {
+        foreach ($hrefs as $index => $href) {
+            if (str_contains($href, $path)) {
+                return $index;
+            }
+        }
+
+        self::fail(sprintf('No stylesheet at %s is linked; the head links: %s', $path, implode(', ', $hrefs)));
     }
 
     /**

@@ -95,7 +95,7 @@ function EmptyState({ translator }: { readonly translator: Translator }): JSX.El
 }
 
 function ScopeBadge({ row }: { readonly row: ReviewRow }): JSX.Element {
-    const variant = row.scopeType === 'default' ? 'hdl-setup-badge' : 'hdl-setup-badge hdl-setup-badge--override';
+    const variant = row.scopeType === 'default' ? 'hui-badge' : 'hui-badge hui-badge--override';
     return (
         <span class={`${variant} hdl-setup-badge--scope`}>
             <Icon name={SCOPE_ICON[row.scopeType]} size={14} />
@@ -184,9 +184,9 @@ interface BlockedStepsProps {
 function BlockedSteps({ blockers, translator, onGo }: BlockedStepsProps): JSX.Element {
     const { t, n } = translator;
     return (
-        <div class="hdl-setup-strip" data-tone="warning" role="alert">
-            <Icon name="warning" size={22} filled class="hdl-setup-strip__icon" />
-            <div class="hdl-setup-strip__text">
+        <div class="hui-strip" data-tone="warning" role="alert">
+            <Icon name="warning" size={22} filled class="hui-strip__icon" />
+            <div class="hui-strip__text">
                 <p class="hdl-setup-review__blocked-title">{t('review.blocked')}</p>
                 <ul class="hdl-setup-review__blocked">
                     {blockers.map((blocker) => (
@@ -234,7 +234,7 @@ function ChangesTable({ rows, groups, steps, marks, saving, translator, onDiscar
         <div class="hdl-setup-table hdl-setup-review">
             <div class="hdl-setup-table__head">
                 <div class="hdl-setup-table__title">
-                    <span class="hdl-setup-card__tile"><Icon name="difference" size={20} /></span>
+                    <span class="hui-card__tile"><Icon name="difference" size={20} /></span>
                     <h3 id={TABLE_TITLE_ID}>{t('review.changes')}</h3>
                 </div>
                 <div class="hdl-setup-table__counters">
@@ -290,7 +290,7 @@ function Checklist({ items, translator }: { readonly items: readonly CheckItem[]
     return (
         <div class="hdl-setup-checklist">
             <div class="hdl-setup-checklist__head">
-                <span class="hdl-setup-card__tile"><Icon name="rocket_launch" size={20} /></span>
+                <span class="hui-card__tile"><Icon name="rocket_launch" size={20} /></span>
                 <h3>{translator.t('checklist.title')}</h3>
             </div>
             {items.map((item) => {
@@ -358,7 +358,7 @@ function SavedPanel({ total, scopes, advanced, checks, translator }: SavedPanelP
                 <div class="hdl-setup-success__actions">
                     <ExternalLink href={TAG_ASSISTANT}>{t('checklist.open_preview')}</ExternalLink>
                     {advanced === null ? null : (
-                        <a class="hdl-setup-button hdl-setup-button--quiet hdl-setup-button--anchor" href={advanced}>
+                        <a class="hui-button hui-button--quiet hui-button--anchor" href={advanced}>
                             <Icon name="tune" size={18} />
                             {t('action.advanced')}
                         </a>

@@ -9,6 +9,9 @@
  * The setup wizard's mount point: the root the browser code renders into, a loading line it replaces, the page
  * configuration as JSON, then the module tags that load it
  *
+ * The root carries the shared admin UI kit's root class (`hui`) beside the wizard's own, so the loading line is
+ * drawn in the kit's typeface and colours before the script runs; the browser code renders inside the root.
+ *
  * @var \Magento\Backend\Block\Template $block
  * @var \Magento\Framework\Escaper $escaper
  */
@@ -18,7 +21,7 @@ if (!$setupPage instanceof \Hryvinskyi\DataLayerAdminUi\ViewModel\SetupPage) {
     throw new \LogicException('The setup wizard template needs the setup page view model as "view_model".');
 }
 ?>
-<div data-role="hdl-setup" class="hdl-setup"
+<div data-role="hdl-setup" class="hdl-setup hui"
      data-failed-text="<?= $escaper->escapeHtmlAttr($setupPage->getFailedText()) ?>">
     <p class="hdl-setup__loading" data-role="hdl-setup-loading" role="status">
         <?= $escaper->escapeHtml($setupPage->getLoadingText()) ?>

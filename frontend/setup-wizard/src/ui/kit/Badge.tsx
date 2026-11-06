@@ -33,8 +33,8 @@ const DOTTED: ReadonlySet<BadgeVariant> = new Set<BadgeVariant>(['on', 'off']);
 export function Badge({ variant = 'neutral', icon, title, children }: BadgeProps): JSX.Element {
     const glyph = icon ?? (variant === 'fixed' ? 'lock' : undefined);
     return (
-        <span class={`hdl-setup-badge hdl-setup-badge--${variant}`} title={title}>
-            {DOTTED.has(variant) ? <span class="hdl-setup-badge__dot" aria-hidden="true" /> : null}
+        <span class={`hui-badge hui-badge--${variant}`} title={title}>
+            {DOTTED.has(variant) ? <span class="hui-badge__dot" aria-hidden="true" /> : null}
             {glyph === undefined ? null : <Icon name={glyph} size={14} />}
             {children}
         </span>

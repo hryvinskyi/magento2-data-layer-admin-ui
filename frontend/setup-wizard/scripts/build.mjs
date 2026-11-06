@@ -13,9 +13,8 @@
  *   vendor/preact-hooks.js         preact/hooks, importing the bare `preact`
  *   vendor/preact-jsx-runtime.js   preact/jsx-runtime, importing the bare `preact`
  *
- * and copies the wizard's typeface into view/adminhtml/web/fonts/source-sans-3/ (or `--fonts-out <dir>`): the
- * latin subset of Source Sans 3 in the three weights the stylesheet declares, with its SIL Open Font License. The
- * admin loads the font from the module's own static files, never from a font service.
+ * The build writes scripts only. The typeface the wizard is drawn in ships with the shared admin UI kit
+ * (`hryvinskyi/magento2-admin-ui`), whose stylesheet the wizard page loads.
  *
  * Preact and the SDK are external everywhere, so the page holds exactly one copy of each and a plugin's hooks read
  * the very contexts the shell provides. Externals match whole specifiers only: esbuild's own `external` option
@@ -28,24 +27,14 @@
  * verify-build can compare it byte for byte.
  */
 import { build } from 'esbuild';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DEFAULT_OUT = resolve(ROOT, '../../view/adminhtml/web/js/setup');
-const DEFAULT_FONTS_OUT = resolve(ROOT, '../../view/adminhtml/web/fonts/source-sans-3');
 const SHARED = ['preact', 'preact/hooks', 'preact/jsx-runtime', '@hryvinskyi/datalayer-setup'];
-
-const FONT_PACKAGE = join(ROOT, 'node_modules/@fontsource/source-sans-3');
-const FONT_FILES = [
-    ...['400', '600', '700'].map((weight) => {
-        const file = `source-sans-3-latin-${weight}-normal.woff2`;
-        return { file, source: join(FONT_PACKAGE, 'files', file) };
-    }),
-    { file: 'OFL.txt', source: join(FONT_PACKAGE, 'LICENSE') },
-];
 
 const reexport = (specifier) => ({
     stdin: { contents: `export * from '${specifier}';`, resolveDir: ROOT, loader: 'js', sourcefile: `${specifier}.js` },
@@ -126,9 +115,8 @@ function refuseSharedSources(inputs) {
     }
 }
 
-const { values } = parseArgs({ options: { out: { type: 'string' }, 'fonts-out': { type: 'string' } } });
+const { values } = parseArgs({ options: { out: { type: 'string' } } });
 const outDir = resolve(values.out ?? DEFAULT_OUT);
-const fontsDir = resolve(values['fonts-out'] ?? DEFAULT_FONTS_OUT);
 
 const built = new Map();
 for (const output of OUTPUTS) {
@@ -140,8 +128,4 @@ for (const [file, result] of built) {
     await mkdir(dirname(target), { recursive: true });
     await writeFile(target, result.contents);
 }
-await mkdir(fontsDir, { recursive: true });
-for (const font of FONT_FILES) {
-    await writeFile(join(fontsDir, font.file), await readFile(font.source));
-}
-console.log(`Built ${OUTPUTS.length} files into ${outDir} and copied ${FONT_FILES.length} font files into ${fontsDir}`);
+console.log(`Built ${OUTPUTS.length} files into ${outDir}`);

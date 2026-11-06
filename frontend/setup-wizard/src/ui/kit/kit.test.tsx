@@ -9,7 +9,10 @@ import { cleanup, fireEvent, render, screen } from '@testing-library/preact';
 import type { JSX } from 'preact';
 import { useState } from 'preact/hooks';
 import {
+    Badge,
     Button,
+    Card,
+    DisclosureButton,
     flagOf,
     iconOr,
     isIconName,
@@ -371,11 +374,11 @@ describe('choices and messages', () => {
                 <Notice tone="info">info line</Notice>
             </div>,
         );
-        const aside = screen.getByText('aside line').closest('.hdl-setup-notice');
-        const plain = screen.getByText('info line').closest('.hdl-setup-notice');
-        assert.equal(aside?.classList.contains('hdl-setup-notice--muted'), true);
+        const aside = screen.getByText('aside line').closest('.hui-notice');
+        const plain = screen.getByText('info line').closest('.hui-notice');
+        assert.equal(aside?.classList.contains('hui-notice--muted'), true);
         assert.equal(aside?.getAttribute('data-tone'), 'info');
-        assert.equal(plain?.classList.contains('hdl-setup-notice--muted'), false);
+        assert.equal(plain?.classList.contains('hui-notice--muted'), false);
     });
 
     it('shows a status in words and lines, announcing only the state word as it changes', () => {
@@ -392,6 +395,44 @@ describe('choices and messages', () => {
         assert.deepEqual(announced.map((region) => region.textContent), ['status.loader.invalid']);
         assert.ok(screen.getByText('status.loader.invalid.note'), 'the note is shown, not announced');
         assert.ok(screen.getByText('https://www.googletagmanager.com/gtm.js?id=GTM-AB12CD3'), 'so are the lines');
+    });
+});
+
+describe('the shared admin UI kit', () => {
+    /*
+     * The classes below are what a step plugin's stylesheet selects, so they are the published contract of these
+     * components: the kit's own `hui-*` classes for the kit's parts, and `hdl-setup-*` only for the wizard's hooks.
+     */
+    const classesOf = (element: Element | null): string[] => [...(element?.classList ?? [])].sort();
+
+    it('draws buttons, cards, badges and fields with the kit\'s classes', () => {
+        renderWithin(
+            <div>
+                <Card icon="tune" title="card.title" aside={<Badge variant="on">badge.on</Badge>}>
+                    <Button variant="primary" onClick={() => undefined}>button.save</Button>
+                    <TextField setting={key('container_id')} />
+                </Card>
+            </div>,
+            at('store:1'),
+        );
+        assert.deepEqual(classesOf(screen.getByRole('button', { name: 'button.save' })), ['hui-button', 'hui-button--primary']);
+        assert.deepEqual(classesOf(screen.getByText('card.title').closest('.hui-card')), ['hui-card']);
+        assert.deepEqual(classesOf(screen.getByText('badge.on')), ['hui-badge', 'hui-badge--on']);
+        const field = screen.getByLabelText('container_id').closest('.hui-field');
+        assert.notEqual(field, null, 'a setting field is a kit field');
+        assert.deepEqual(
+            classesOf(screen.getByRole('button', { name: 'action.override' })),
+            ['hdl-setup-origin__action', 'hui-button', 'hui-button--link'],
+            'the origin action is a kit link button with the wizard\'s hook',
+        );
+    });
+
+    it('draws a disclosure as a kit link button with the wizard\'s spacing', () => {
+        renderWithin(<DisclosureButton expanded={false} onToggle={() => undefined}>more.options</DisclosureButton>);
+        assert.deepEqual(
+            classesOf(screen.getByRole('button', { name: 'more.options' })),
+            ['hdl-setup-disclosure', 'hui-button', 'hui-button--link', 'hui-disclosure'],
+        );
     });
 });
 

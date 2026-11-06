@@ -5,11 +5,11 @@
  */
 
 /**
- * The wizard's buttons and links, in the admin's button styles:
+ * The wizard's buttons and links, drawn by the shared admin UI kit's button classes:
  *
- * - `primary`: the one forward action of the page (orange).
- * - `secondary`: an ordinary action (grey).
- * - `tertiary`: an action inside a message or a card (white, bordered).
+ * - `primary`: the one forward action of the page (the accent colour).
+ * - `secondary`: an ordinary action (white, bordered).
+ * - `tertiary`: an action inside a message or a card (smaller, white, bordered).
  * - `quiet`: a light action in the page header (white, light border).
  * - `link`: an action that reads like a link (Override here, Skip this step).
  *
@@ -65,7 +65,7 @@ export function Button({
         <button
             type="button"
             id={id}
-            class={`hdl-setup-button hdl-setup-button--${variant}`}
+            class={`hui-button hui-button--${variant}`}
             onClick={busy || onClick === undefined ? undefined : () => onClick()}
             disabled={disabled}
             aria-busy={busy ? true : undefined}
@@ -90,7 +90,7 @@ export interface ExternalLinkProps {
 /** A link to another site (Google's tools), opened in a new tab without handing it this page. */
 export function ExternalLink({ href, variant = 'secondary', children }: ExternalLinkProps): JSX.Element {
     return (
-        <a class={`hdl-setup-button hdl-setup-button--${variant} hdl-setup-button--anchor`} href={href} target="_blank" rel="noopener noreferrer">
+        <a class={`hui-button hui-button--${variant} hui-button--anchor`} href={href} target="_blank" rel="noopener noreferrer">
             {children}
             <Icon name="open_in_new" size={16} />
         </a>
@@ -110,7 +110,7 @@ export function DisclosureButton({ expanded, onToggle, controls, children }: Dis
     return (
         <button
             type="button"
-            class="hdl-setup-button hdl-setup-button--link hdl-setup-disclosure"
+            class="hui-button hui-button--link hui-disclosure hdl-setup-disclosure"
             aria-expanded={expanded}
             aria-controls={controls}
             onClick={onToggle}

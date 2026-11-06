@@ -9,6 +9,8 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <!-- The setup wizard: one block the browser code renders into, and the wizard's look -->
+    <!-- The admin UI kit's stylesheet comes first: the wizard's frame rules override kit parts by that order -->
+    <update handle="hryvinskyi_admin_ui"/>
     <head>
         <title>Set up GA4 tracking</title>
         <css src="Hryvinskyi_DataLayerAdminUi::css/setup-wizard.css"/>

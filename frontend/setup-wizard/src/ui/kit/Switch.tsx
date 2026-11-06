@@ -32,15 +32,15 @@ export function Switch({ id, checked, onChange, disabled = false, label, describ
             type="button"
             role="switch"
             id={id}
-            class={`hdl-setup-switch hdl-setup-switch--${size}`}
+            class={`hui-switch hui-switch--${size}`}
             aria-checked={checked}
             aria-label={label}
             aria-describedby={describedBy}
             disabled={disabled}
             onClick={() => onChange(!checked)}
         >
-            <span class="hdl-setup-switch__track" aria-hidden="true"><span class="hdl-setup-switch__knob" /></span>
-            <span class="hdl-setup-switch__text">{checked ? t('switch.yes') : t('switch.no')}</span>
+            <span class="hui-switch__track" aria-hidden="true"><span class="hui-switch__knob" /></span>
+            <span class="hui-switch__text">{checked ? t('switch.yes') : t('switch.no')}</span>
         </button>
     );
 }

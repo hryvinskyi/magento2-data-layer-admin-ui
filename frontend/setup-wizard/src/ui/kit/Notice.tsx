@@ -55,9 +55,9 @@ export interface MessageStripProps {
 
 export function MessageStrip({ tone, action, role, children }: MessageStripProps): JSX.Element {
     return (
-        <div class="hdl-setup-strip" data-tone={tone} role={roleAttribute(role ?? TONE_ROLE[tone])}>
-            <Icon name={TONE_ICON[tone]} size={22} filled class="hdl-setup-strip__icon" />
-            <div class="hdl-setup-strip__text">{children}</div>
+        <div class="hui-strip" data-tone={tone} role={roleAttribute(role ?? TONE_ROLE[tone])}>
+            <Icon name={TONE_ICON[tone]} size={22} filled class="hui-strip__icon" />
+            <div class="hui-strip__text">{children}</div>
             {action === undefined ? null : <Button variant="tertiary" onClick={action.onClick} busy={action.busy}>{action.label}</Button>}
         </div>
     );
@@ -77,14 +77,14 @@ export interface NoticeProps {
 export function Notice({ tone, role, icon, muted = false, action, children }: NoticeProps): JSX.Element {
     return (
         <div
-            class={muted ? 'hdl-setup-notice hdl-setup-notice--muted' : 'hdl-setup-notice'}
+            class={muted ? 'hui-notice hui-notice--muted' : 'hui-notice'}
             data-tone={tone}
             role={roleAttribute(role ?? TONE_ROLE[tone])}
         >
-            <Icon name={icon ?? TONE_ICON[tone]} size={20} filled={icon === undefined} class="hdl-setup-notice__icon" />
-            <div class="hdl-setup-notice__text">{children}</div>
+            <Icon name={icon ?? TONE_ICON[tone]} size={20} filled={icon === undefined} class="hui-notice__icon" />
+            <div class="hui-notice__text">{children}</div>
             {action === undefined ? null : (
-                <div class="hdl-setup-notice__action">
+                <div class="hui-notice__action">
                     <Button variant="tertiary" onClick={action.onClick} busy={action.busy}>{action.label}</Button>
                 </div>
             )}

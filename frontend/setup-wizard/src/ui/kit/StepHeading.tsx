@@ -36,7 +36,7 @@ export function StepHeading({ id, icon, counter, title, intro, skip, titleRef }:
             <h2 id={id} {...(titleRef === undefined ? {} : { ref: titleRef })} class="hdl-setup-heading__title" tabIndex={-1}>{title}</h2>
             {intro === undefined ? null : <p class="hdl-setup-heading__intro">{intro}</p>}
             {skip === undefined ? null : (
-                <button type="button" class="hdl-setup-button hdl-setup-button--link hdl-setup-heading__skip" onClick={skip.onSkip}>
+                <button type="button" class="hui-button hui-button--link hdl-setup-heading__skip" onClick={skip.onSkip}>
                     {skip.label}
                     <Icon name="arrow_forward" size={18} />
                 </button>

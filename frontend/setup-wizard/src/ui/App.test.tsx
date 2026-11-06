@@ -274,7 +274,7 @@ describe('leaving and saving', () => {
             wizard.gateway.saves[0]?.answer.reject(new RequestError('expired'));
             await settle();
         });
-        assert.equal(screen.getByRole('alert').querySelector('.hdl-setup-strip__text')?.textContent, 'request.expired');
+        assert.equal(screen.getByRole('alert').querySelector('.hui-strip__text')?.textContent, 'request.expired');
         assert.equal(screen.getByRole('button', { name: 'action.save_all' }).hasAttribute('disabled'), false);
         assert.ok(screen.getByText('footer.unsaved.one'), 'every edit is kept');
     });

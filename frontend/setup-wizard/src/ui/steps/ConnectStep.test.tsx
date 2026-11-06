@@ -30,7 +30,7 @@ const leave = (label: string): void => {
 
 /** The field's whole row: label, control, origin line and its action. */
 function rowOf(label: string): HTMLElement {
-    const row = field(label).closest('.hdl-setup-field');
+    const row = field(label).closest('.hui-field');
     assert.ok(row instanceof HTMLElement, `${label} sits in a field row`);
     return row;
 }

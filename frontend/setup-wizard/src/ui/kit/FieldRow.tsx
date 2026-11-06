@@ -78,17 +78,17 @@ export function FieldRow({
     const ids = fieldIds(controlId);
 
     return (
-        <div class="hdl-setup-field" data-origin={origin.kind}>
-            <div class="hdl-setup-field__head">
+        <div class="hui-field" data-origin={origin.kind}>
+            <div class="hui-field__head">
                 {labelFor
-                    ? <label id={ids.label} for={ids.control} class="hdl-setup-field__label">{label}</label>
-                    : <span id={ids.label} class="hdl-setup-field__label">{label}</span>}
-                <span class="hdl-setup-field__tag">{t(`field.reach.${reach}`)}</span>
+                    ? <label id={ids.label} for={ids.control} class="hui-field__label">{label}</label>
+                    : <span id={ids.label} class="hui-field__label">{label}</span>}
+                <span class="hui-field__tag">{t(`field.reach.${reach}`)}</span>
             </div>
-            {help === undefined ? null : <div id={ids.help} class="hdl-setup-field__help">{help}</div>}
+            {help === undefined ? null : <div id={ids.help} class="hui-field__help">{help}</div>}
             {children}
             {error === undefined || error === null ? null : (
-                <div id={ids.error} class="hdl-setup-field__error" role="alert">
+                <div id={ids.error} class="hui-field__error" role="alert">
                     <Icon name="error" size={16} filled />
                     {error}
                 </div>

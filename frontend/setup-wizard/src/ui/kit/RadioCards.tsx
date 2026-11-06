@@ -58,7 +58,7 @@ export function RadioCards({
             aria-label={label}
             aria-describedby={describedBy}
             aria-disabled={disabled ? true : undefined}
-            class={`hdl-setup-radios hdl-setup-radios--${variant} hdl-setup-radios--${direction}`}
+            class={`hui-radios hui-radios--${variant} hui-radios--${direction}`}
         >
             {options.map((option) => {
                 const checked = option.value === value;
@@ -66,23 +66,23 @@ export function RadioCards({
                 return (
                     <label
                         key={option.value}
-                        class="hdl-setup-radio"
+                        class="hui-radio"
                         data-checked={checked ? 'true' : 'false'}
                         data-disabled={unavailable ? 'true' : 'false'}
                     >
                         {option.icon === undefined ? null : (
-                            <span class="hdl-setup-radio__tile"><Icon name={option.icon} size={20} /></span>
+                            <span class="hui-radio__tile"><Icon name={option.icon} size={20} /></span>
                         )}
-                        <span class="hdl-setup-radio__text">
-                            <span class="hdl-setup-radio__label">
+                        <span class="hui-radio__text">
+                            <span class="hui-radio__label">
                                 <span>{option.label}</span>
-                                {option.badge === undefined ? null : <span class="hdl-setup-badge hdl-setup-badge--recommended">{option.badge}</span>}
+                                {option.badge === undefined ? null : <span class="hui-badge hui-badge--recommended">{option.badge}</span>}
                             </span>
-                            {option.description === undefined ? null : <span class="hdl-setup-radio__description">{option.description}</span>}
+                            {option.description === undefined ? null : <span class="hui-radio__description">{option.description}</span>}
                         </span>
                         <input
                             type="radio"
-                            class="hdl-setup-radio__input"
+                            class="hui-radio__input"
                             name={name}
                             value={option.value}
                             checked={checked}

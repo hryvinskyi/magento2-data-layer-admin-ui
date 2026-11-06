@@ -111,13 +111,13 @@ export function OriginLine({ origin, onOverride, onInherit }: OriginLineProps): 
     const handler = line.action === null ? undefined : handlers[line.action];
 
     return (
-        <div class="hdl-setup-origin-line">
-            <span class={line.own ? 'hdl-setup-origin hdl-setup-origin--own' : 'hdl-setup-origin'}>
+        <div class="hui-origin-line">
+            <span class={line.own ? 'hui-origin hui-origin--own' : 'hui-origin'}>
                 <Icon name={line.icon} size={14} />
                 <span>{line.text}</span>
             </span>
             {line.action === null || handler === undefined ? null : (
-                <button type="button" class="hdl-setup-button hdl-setup-button--link hdl-setup-origin__action" onClick={handler}>
+                <button type="button" class="hui-button hui-button--link hdl-setup-origin__action" onClick={handler}>
                     {translator.t(ACTION_PHRASE[line.action])}
                 </button>
             )}

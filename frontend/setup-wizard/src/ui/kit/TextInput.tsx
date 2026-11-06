@@ -41,7 +41,7 @@ export interface TextInputProps {
 }
 
 const inputClass = (width: ControlWidth, mono: boolean): string =>
-    `hdl-setup-input hdl-setup-input--${width}${mono ? ' hdl-setup-input--mono' : ''}`;
+    `hui-input hui-input--${width}${mono ? ' hui-input--mono' : ''}`;
 
 export function TextInput({
     id,
@@ -59,7 +59,7 @@ export function TextInput({
     type = 'text',
 }: TextInputProps): JSX.Element {
     return (
-        <div class="hdl-setup-input-row">
+        <div class="hui-input-row">
             <input
                 id={id}
                 type={type}
@@ -75,7 +75,7 @@ export function TextInput({
                 onInput={(event) => onInput(event.currentTarget.value)}
                 onBlur={onBlur}
             />
-            {suffix === undefined ? null : <span class="hdl-setup-input-row__suffix">{suffix}</span>}
+            {suffix === undefined ? null : <span class="hui-input-row__suffix">{suffix}</span>}
         </div>
     );
 }
@@ -113,18 +113,18 @@ export function SecretInput({
 }: SecretInputProps): JSX.Element {
     const { t } = useT();
     const note = (
-        <span class="hdl-setup-input-row__note">
+        <span class="hui-input-row__note">
             <Icon name="lock" size={16} />
             {t('secret.stored')}
         </span>
     );
     if (isStoredSecret(value)) {
         return (
-            <div class="hdl-setup-input-row">
+            <div class="hui-input-row">
                 <input
                     id={id}
                     type="text"
-                    class={`${inputClass(width, true)} hdl-setup-input--masked`}
+                    class={`${inputClass(width, true)} hui-input--masked`}
                     value={t('secret.masked')}
                     readOnly
                     disabled={disabled}
@@ -136,7 +136,7 @@ export function SecretInput({
         );
     }
     return (
-        <div class="hdl-setup-input-row">
+        <div class="hui-input-row">
             <input
                 id={id}
                 type="password"

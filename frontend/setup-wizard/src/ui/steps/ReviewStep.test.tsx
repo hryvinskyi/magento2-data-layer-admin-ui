@@ -120,7 +120,7 @@ describe('the review step with changes', () => {
         const [current, next, scopeCell] = within(row).getAllByRole('cell');
         assert.equal(current?.textContent, 'GTM-AB12CD3origin.inherited', 'the value it takes now, and from where');
         assert.equal(next?.textContent, 'GTM-NEW1');
-        assert.equal(scopeCell?.querySelector('.hdl-setup-badge')?.textContent, 'scope.main');
+        assert.equal(scopeCell?.querySelector('.hui-badge')?.textContent, 'scope.main');
         assert.ok(within(row).getByRole('button', { name: 'review.discard_row' }), 'each pending change can be discarded');
         assert.deepEqual(['review.column.setting', 'review.column.current', 'review.column.new', 'scope.label'].map(
             (name) => within(table()).getByRole('columnheader', { name }).textContent,

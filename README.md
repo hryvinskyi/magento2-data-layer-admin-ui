@@ -27,4 +27,19 @@ composer require hryvinskyi/magento2-data-layer-admin-ui
 - `hryvinskyi/magento2-data-layer-api`
 - `hryvinskyi/magento2-data-layer`
 - `hryvinskyi/magento2-theme-assets`
+- `hryvinskyi/magento2-admin-ui`
 - Magento 2.4.x
+
+## Look of the setup wizard
+
+The setup wizard is drawn by the shared admin UI kit, `hryvinskyi/magento2-admin-ui`: its typeface (Source Sans 3,
+served from the kit's own static files), its `--hui-*` colour tokens and the parts every step composes (buttons,
+cards, notices, fields, controls, badges, the status panel). The wizard page loads the kit's stylesheet before its
+own, `setup-wizard.css`, which keeps the frame and the steps' own parts.
+
+A theme restyles the wizard by overriding the kit's `--hui-*` custom properties. The root `--hdl-setup-*` tokens of
+the wizard 1.0 are still declared, as aliases of the kit tokens, so a stylesheet that reads them keeps its colours;
+overriding one of them no longer restyles the parts the kit draws. The status panel's three component-local
+properties, `--hdl-setup-status-dot`, `--hdl-setup-status-tile` and `--hdl-setup-status-word`, are not declared any
+more: they are now `--hui-status-dot`, `--hui-status-tile` and `--hui-status-word`, set on `.hui-status`. A step plugin's stylesheet selects a kit part by its
+`hui-*` class (`.hui-button`, `.hui-field`).

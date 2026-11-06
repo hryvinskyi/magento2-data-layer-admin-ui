@@ -23,13 +23,13 @@ export interface CardProps {
 
 export function Card({ icon, title, aside, children }: CardProps): JSX.Element {
     return (
-        <div class="hdl-setup-card">
-            <div class="hdl-setup-card__head">
-                <span class="hdl-setup-card__tile"><Icon name={icon} size={20} /></span>
-                <h3 class="hdl-setup-card__title">{title}</h3>
-                {aside === undefined ? null : <div class="hdl-setup-card__aside">{aside}</div>}
+        <div class="hui-card">
+            <div class="hui-card__head">
+                <span class="hui-card__tile"><Icon name={icon} size={20} /></span>
+                <h3 class="hui-card__title">{title}</h3>
+                {aside === undefined ? null : <div class="hui-card__aside">{aside}</div>}
             </div>
-            <div class="hdl-setup-card__body">{children}</div>
+            <div class="hui-card__body">{children}</div>
         </div>
     );
 }
@@ -46,12 +46,12 @@ export interface PanelProps {
 
 export function Panel({ title, icon, live = false, children }: PanelProps): JSX.Element {
     return (
-        <div class="hdl-setup-panel">
-            <div class="hdl-setup-panel__head">
-                {icon === undefined ? null : <Icon name={icon} size={20} class="hdl-setup-panel__icon" />}
-                <h3 class="hdl-setup-panel__title">{title}</h3>
+        <div class="hui-panel">
+            <div class="hui-panel__head">
+                {icon === undefined ? null : <Icon name={icon} size={20} class="hui-panel__icon" />}
+                <h3 class="hui-panel__title">{title}</h3>
             </div>
-            <div class="hdl-setup-panel__body" role={live ? 'status' : undefined}>{children}</div>
+            <div class="hui-panel__body" role={live ? 'status' : undefined}>{children}</div>
         </div>
     );
 }
@@ -64,9 +64,9 @@ export interface ColumnsProps {
 
 export function Columns({ aside, children }: ColumnsProps): JSX.Element {
     return (
-        <div class={aside === undefined ? 'hdl-setup-columns hdl-setup-columns--single' : 'hdl-setup-columns'}>
-            <div class="hdl-setup-columns__main">{children}</div>
-            {aside === undefined ? null : <aside class="hdl-setup-columns__aside">{aside}</aside>}
+        <div class={aside === undefined ? 'hui-columns hui-columns--single' : 'hui-columns'}>
+            <div class="hui-columns__main">{children}</div>
+            {aside === undefined ? null : <aside class="hui-columns__aside">{aside}</aside>}
         </div>
     );
 }

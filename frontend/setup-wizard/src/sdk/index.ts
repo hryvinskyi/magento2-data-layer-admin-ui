@@ -17,6 +17,11 @@
  * steps, required-value rules, and the server-delivery answer. It calls its own endpoints with `useJsonClient()`
  * and builds its step from the UI kit exported here, so every step looks and behaves alike.
  *
+ * The kit components (buttons, cards, notices, fields, controls, badges, the status panel) draw the classes of the
+ * shared admin UI kit (`hui-*`, from `hryvinskyi/magento2-admin-ui`) and need the kit's stylesheet, which the wizard
+ * page loads before its own. The frame's parts keep the wizard's `hdl-setup-*` classes. A plugin's stylesheet
+ * selects a kit part by its `hui-*` class and reads the `--hui-*` tokens.
+ *
  * Errors are recognised by name and shape (`isRequestError`, `isContractError`, `error.name`), never by
  * `instanceof`: a class reached from another bundle is not the class this file defines.
  */
@@ -82,7 +87,7 @@ export type { Remote } from '../ui/hooks/use-latest-request.ts';
 export { useStepNavigation, type StepNavigation, type StepView } from '../ui/hooks/use-step-navigation.ts';
 export { usePageLinks, type PageLinks } from '../ui/hooks/use-page-links.ts';
 
-/* The UI kit: the frame's parts and the controls every step composes. */
+/* The UI kit: the frame's parts (wizard classes) and the controls every step composes (the shared kit's classes). */
 export { Badge, type BadgeProps, type BadgeVariant } from '../ui/kit/Badge.tsx';
 export { Button, DisclosureButton, ExternalLink, type ButtonProps, type ButtonVariant, type DisclosureButtonProps, type ExternalLinkProps } from '../ui/kit/Button.tsx';
 export { Card, Columns, Panel, type CardProps, type ColumnsProps, type PanelProps } from '../ui/kit/Card.tsx';

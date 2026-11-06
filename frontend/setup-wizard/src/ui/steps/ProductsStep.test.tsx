@@ -78,7 +78,7 @@ async function answerPreview(call: RecordingGateway['previews'][number], answer:
 
 /** Whether the note holding `text` is drawn as a grey aside. */
 const isMutedNote = (text: string): boolean =>
-    screen.getByText(text).closest('.hdl-setup-notice')?.classList.contains('hdl-setup-notice--muted') === true;
+    screen.getByText(text).closest('.hui-notice')?.classList.contains('hui-notice--muted') === true;
 
 const HITS: readonly ProductHit[] = [
     { id: 11, sku: 'BP-2040', name: 'Canvas backpack' },
@@ -140,7 +140,7 @@ describe('the fields', () => {
         const brand = (): HTMLSelectElement => screen.getByRole<HTMLSelectElement>('combobox', { name: 'brand' });
         assert.equal(brand().disabled, true);
 
-        const field = brand().closest<HTMLElement>('.hdl-setup-field');
+        const field = brand().closest<HTMLElement>('.hui-field');
         assert.ok(field);
         fireEvent.click(within(field).getByRole('button', { name: 'action.override' }));
 

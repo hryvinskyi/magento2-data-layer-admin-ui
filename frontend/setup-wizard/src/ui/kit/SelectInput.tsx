@@ -49,16 +49,16 @@ export function SelectInput({
     label,
 }: SelectInputProps): JSX.Element {
     const classes = [
-        'hdl-setup-select',
-        `hdl-setup-select--${width}`,
-        compact ? 'hdl-setup-select--compact' : null,
-        strong ? 'hdl-setup-select--strong' : null,
+        'hui-select',
+        `hui-select--${width}`,
+        compact ? 'hui-select--compact' : null,
+        strong ? 'hui-select--strong' : null,
     ].filter((part) => part !== null).join(' ');
     return (
         <div class={classes}>
             <select
                 id={id}
-                class="hdl-setup-select__control"
+                class="hui-select__control"
                 value={value}
                 disabled={disabled}
                 aria-invalid={invalid}
@@ -68,7 +68,7 @@ export function SelectInput({
             >
                 {options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
             </select>
-            {compact ? null : <Icon name="expand_more" size={20} class="hdl-setup-select__chevron" />}
+            {compact ? null : <Icon name="expand_more" size={20} class="hui-select__chevron" />}
         </div>
     );
 }

@@ -72,7 +72,7 @@ export function Stepper({ narrow }: StepperProps): JSX.Element {
                     >
                         <Marker item={item} size={14} />
                         <span>{translator.t(item.step.title)}</span>
-                        <span class="hdl-setup-sr-only">{statusText(item, translator)}</span>
+                        <span class="hui-sr-only">{statusText(item, translator)}</span>
                     </button>
                 ))}
             </nav>

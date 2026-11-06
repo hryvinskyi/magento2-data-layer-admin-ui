@@ -47,20 +47,20 @@ export interface StatusPanelProps {
 export function StatusPanel({ title, state, word, note, lines = [], children }: StatusPanelProps): JSX.Element {
     return (
         <Panel title={title}>
-            <div class="hdl-setup-status" data-state={state}>
-                <div class="hdl-setup-status__summary">
-                    <span class="hdl-setup-status__tile"><Icon name={STATE_ICON[state]} size={24} filled /></span>
-                    <div class="hdl-setup-status__words">
-                        <span class="hdl-setup-status__word" role="status">{word}</span>
-                        <span class="hdl-setup-status__note">{note}</span>
+            <div class="hui-status" data-state={state}>
+                <div class="hui-status__summary">
+                    <span class="hui-status__tile"><Icon name={STATE_ICON[state]} size={24} filled /></span>
+                    <div class="hui-status__words">
+                        <span class="hui-status__word" role="status">{word}</span>
+                        <span class="hui-status__note">{note}</span>
                     </div>
                 </div>
                 {lines.map((line) => (
-                    <div key={line.label} class="hdl-setup-status__line">
-                        <span class="hdl-setup-status__label">{line.label}</span>
-                        <span class="hdl-setup-status__box">
-                            <span class="hdl-setup-status__dot" aria-hidden="true" />
-                            <span class="hdl-setup-status__text" data-tone={line.tone ?? 'normal'}>{line.text}</span>
+                    <div key={line.label} class="hui-status__line">
+                        <span class="hui-status__label">{line.label}</span>
+                        <span class="hui-status__box">
+                            <span class="hui-status__dot" aria-hidden="true" />
+                            <span class="hui-status__text" data-tone={line.tone ?? 'normal'}>{line.text}</span>
                         </span>
                     </div>
                 ))}

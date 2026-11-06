@@ -43,7 +43,7 @@ export function FrameHeader({ breadcrumb, title, advanced, close, onLeave }: Fra
             <div class="hdl-setup-header__actions">
                 {advancedHref === null ? null : (
                     <a
-                        class="hdl-setup-button hdl-setup-button--quiet hdl-setup-button--anchor"
+                        class="hui-button hui-button--quiet hui-button--anchor"
                         href={advancedHref}
                         onClick={(event) => {
                             if (isPlainClick(event)) {

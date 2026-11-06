@@ -292,7 +292,7 @@ describe('the events table', () => {
         for (const [name, label] of [['view_promotion', 'channel.fixed.browser'], ['refund', 'channel.fixed.server']] as const) {
             const row = eventRow(name);
             const badge = within(row).getByText(label);
-            assert.equal(badge.closest('.hdl-setup-badge')?.getAttribute('title'), `${label}.hint`);
+            assert.equal(badge.closest('.hui-badge')?.getAttribute('title'), `${label}.hint`);
             assert.equal(within(row).queryByRole('combobox'), null);
         }
     });
@@ -301,7 +301,7 @@ describe('the events table', () => {
         openTrack(worded(withCatalogue(multiWebsiteConfig, (name) => (name === 'login' ? { fixedChannel: 'both' } : {}))));
 
         const row = eventRow('login');
-        assert.equal(within(row).getByText('channel.fixed.both').closest('.hdl-setup-badge')?.getAttribute('title'), 'channel.fixed.both.hint');
+        assert.equal(within(row).getByText('channel.fixed.both').closest('.hui-badge')?.getAttribute('title'), 'channel.fixed.both.hint');
         assert.equal(within(row).queryByRole('combobox'), null);
         assert.match(counters(), /1 from the server/);
         assert.ok(screen.getByText('Counted twice: login'));

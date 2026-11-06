@@ -182,9 +182,9 @@ export function ConnectStep(): JSX.Element {
                     )}
                 </SettingField>
 
-                <div class="hdl-setup-field">
-                    <div class="hdl-setup-field__head">
-                        <span class="hdl-setup-field__label">{t('mode.label')}</span>
+                <div class="hui-field">
+                    <div class="hui-field__head">
+                        <span class="hui-field__label">{t('mode.label')}</span>
                     </div>
                     {blocking.map((label) => (
                         <Notice key={label} tone="info" muted icon="lock">{t('connect.mode.blocked', label)}</Notice>

@@ -34,7 +34,7 @@ export interface FooterProps {
 export function Footer({ back, status, primary }: FooterProps): JSX.Element {
     return (
         <div class="hdl-setup-footer">
-            <button type="button" class="hdl-setup-button hdl-setup-button--secondary" onClick={back.onClick} disabled={back.disabled}>
+            <button type="button" class="hui-button hui-button--secondary" onClick={back.onClick} disabled={back.disabled}>
                 <Icon name="arrow_back" size={18} />
                 {back.label}
             </button>
@@ -45,7 +45,7 @@ export function Footer({ back, status, primary }: FooterProps): JSX.Element {
             </div>
             <button
                 type="button"
-                class="hdl-setup-button hdl-setup-button--primary"
+                class="hui-button hui-button--primary"
                 onClick={primary.busy ? undefined : primary.onClick}
                 disabled={primary.disabled && !primary.busy}
                 aria-busy={primary.busy ? true : undefined}

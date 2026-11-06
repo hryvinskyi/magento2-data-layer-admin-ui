@@ -114,7 +114,7 @@ export function iconOr(name: string | undefined, fallback: IconName): IconName {
     return name !== undefined && isIconName(name) ? name : fallback;
 }
 
-/** Rendered sizes in pixels; each has its own class in the stylesheet. */
+/** Rendered sizes in pixels; each has its own class in the admin UI kit's stylesheet. */
 export type IconSize = 14 | 16 | 18 | 20 | 22 | 24 | 26 | 28 | 30;
 
 export interface IconProps {
@@ -129,7 +129,7 @@ export interface IconProps {
 
 export function Icon({ name, size = 18, filled = false, label, class: extra }: IconProps): JSX.Element {
     const path = (filled ? FILLED[name] : undefined) ?? GLYPHS[name];
-    const className = ['hdl-setup-icon', `hdl-setup-icon--${size}`, extra].filter((part) => part !== undefined).join(' ');
+    const className = ['hui-icon', `hui-icon--${size}`, extra].filter((part) => part !== undefined).join(' ');
     const decorative = label === undefined;
     return (
         <svg

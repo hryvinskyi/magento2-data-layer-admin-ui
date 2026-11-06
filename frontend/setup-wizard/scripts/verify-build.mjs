@@ -6,9 +6,8 @@
 
 /**
  * Proves the committed browser files are exactly what the sources build to: rebuilds into a temporary directory and
- * compares every file byte for byte with view/adminhtml/web/js/setup/ and with the copied typeface in
- * view/adminhtml/web/fonts/source-sans-3/. A file that differs, is missing, or is committed without the build
- * producing it fails the check (exit code 1). Both directories belong to the build alone.
+ * compares every file byte for byte with view/adminhtml/web/js/setup/. A file that differs, is missing, or is
+ * committed without the build producing it fails the check (exit code 1). The directory belongs to the build alone.
  */
 import { execFileSync } from 'node:child_process';
 import { mkdtemp, readdir, readFile, rm } from 'node:fs/promises';
@@ -19,7 +18,6 @@ import { fileURLToPath } from 'node:url';
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TARGETS = [
     { option: '--out', scratch: 'js', committed: resolve(ROOT, '../../view/adminhtml/web/js/setup') },
-    { option: '--fonts-out', scratch: 'fonts', committed: resolve(ROOT, '../../view/adminhtml/web/fonts/source-sans-3') },
 ];
 
 /**

@@ -258,7 +258,8 @@ class AdminSettingsTest extends TestCase
         $brandCodes = $this->values($brands);
         self::assertSame('', $brandCodes[0] ?? null);
         self::assertContains('manufacturer', $brandCodes);
-        self::assertNotContains('sku', $brandCodes);
+        self::assertContains('sku', $brandCodes, 'A text attribute can name a brand.');
+        self::assertNotContains('price', $brandCodes);
     }
 
     /**

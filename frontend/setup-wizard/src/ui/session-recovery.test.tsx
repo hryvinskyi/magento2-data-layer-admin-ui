@@ -121,7 +121,7 @@ describe('an ended admin session', () => {
         await answer(first, 200, EXPIRED);
 
         const strip = screen.getByRole('alert');
-        assert.equal(strip.querySelector('.hdl-setup-strip__text')?.textContent, 'request.expired');
+        assert.equal(strip.querySelector('.hui-strip__text')?.textContent, 'request.expired');
         fireEvent.click(within(strip).getByRole('button', { name: 'action.retry' }));
 
         const renewal = network.calls[1];
@@ -155,7 +155,7 @@ describe('an ended admin session', () => {
         await answer(network.calls[1], 200, EXPIRED);
 
         assert.equal(network.calls.length, 2, 'nothing is saved with a session that is still not valid');
-        assert.equal(screen.getByRole('alert').querySelector('.hdl-setup-strip__text')?.textContent, 'request.expired');
+        assert.equal(screen.getByRole('alert').querySelector('.hui-strip__text')?.textContent, 'request.expired');
         assert.ok(within(screen.getByRole('alert')).getByRole('button', { name: 'action.retry' }), 'it can be tried again');
         assert.ok(screen.getByText('footer.unsaved.one'), 'the edit is kept');
     });
