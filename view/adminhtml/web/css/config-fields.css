@@ -7,6 +7,10 @@
 /*
  * Every rule is scoped under its component's root class, so the settings form's generic rules (table cells, notes,
  * definition lists, checkboxes) cannot reach inside, and the component's rules reach nothing else.
+ *
+ * Colours, the monospace stack and the switch knob's shadow are the admin UI kit's tokens (`--hui-*`). Each component's
+ * root carries the kit's `hui-tokens` class, which declares them without restyling anything, so the form around the
+ * component keeps the admin theme's look.
  */
 
 /* Read-only status: a coloured dot and the status on one line, an optional link under it */
@@ -19,9 +23,9 @@
     width: 100%;
     margin: 0;
     padding: 7px 10px;
-    background: #f8f8f8;
-    border: 1px solid #e3e3e3;
-    color: #303030;
+    background: var(--hui-well);
+    border: 1px solid var(--hui-line);
+    color: var(--hui-ink);
     font-size: 1.3rem;
     line-height: 1.4;
 }
@@ -39,7 +43,7 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #adadad;
+    background: var(--hui-line-strong);
 }
 .hryvinskyi-datalayer-status .hryvinskyi-datalayer-status__text {
     flex: 1 1 auto;
@@ -47,20 +51,19 @@
     overflow-wrap: anywhere;
 }
 .hryvinskyi-datalayer-status .hryvinskyi-datalayer-status__text--code {
-    font-family: Menlo, Consolas, monospace;
+    font-family: var(--hui-mono);
     font-size: 12.5px;
     word-break: break-all;
 }
 .hryvinskyi-datalayer-status .hryvinskyi-datalayer-status__link { font-size: 1.3rem; }
-.hryvinskyi-datalayer-status--ok .hryvinskyi-datalayer-status__dot { background: #79a22e; }
-.hryvinskyi-datalayer-status--attention .hryvinskyi-datalayer-status__dot { background: #eb5202; }
-.hryvinskyi-datalayer-status.hryvinskyi-datalayer-status--error { background: #fff5f5; border-color: #f1c0c0; }
-.hryvinskyi-datalayer-status--error .hryvinskyi-datalayer-status__dot { background: #e22626; }
-.hryvinskyi-datalayer-status--error .hryvinskyi-datalayer-status__text { color: #b30000; }
-
-/* A comment that warns: the form's note in the warning colour */
-.hryvinskyi-datalayer-note--warning.note,
-.hryvinskyi-datalayer-note--warning.note span { color: #a35f00; font-weight: 600; }
+.hryvinskyi-datalayer-status--ok .hryvinskyi-datalayer-status__dot { background: var(--hui-ok); }
+.hryvinskyi-datalayer-status--attention .hryvinskyi-datalayer-status__dot { background: var(--hui-warn); }
+.hryvinskyi-datalayer-status.hryvinskyi-datalayer-status--error {
+    background: var(--hui-error-bg);
+    border-color: var(--hui-error-line);
+}
+.hryvinskyi-datalayer-status--error .hryvinskyi-datalayer-status__dot { background: var(--hui-error); }
+.hryvinskyi-datalayer-status--error .hryvinskyi-datalayer-status__text { color: var(--hui-error-ink); }
 
 /* Notices: a warning across the form, or a compact one inside a component */
 .hryvinskyi-datalayer-notice {
@@ -70,8 +73,8 @@
     box-sizing: border-box;
     margin: 2.2rem 0 0;
     padding: 16px 18px;
-    background: #fffbbb;
-    color: #303030;
+    background: var(--hui-warn-bg);
+    color: var(--hui-ink);
     font-size: 1.4rem;
     line-height: 1.5;
 }
@@ -84,8 +87,8 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: #c07600;
-    color: #fff;
+    background: var(--hui-warn);
+    color: var(--hui-on-accent);
     font-size: 1.3rem;
     font-weight: 700;
     line-height: 1;
@@ -112,7 +115,7 @@
     gap: 10px;
     box-sizing: border-box;
     margin: 2.2rem 0 0;
-    color: #303030;
+    color: var(--hui-ink);
     font-size: 1.3rem;
     line-height: 1.4;
 }
@@ -130,7 +133,7 @@
     align-items: baseline;
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__label { font-size: 1.4rem; font-weight: 600; }
-.hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__scope { font-size: 1.1rem; color: #808080; }
+.hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__scope { font-size: 1.1rem; color: var(--hui-faint); }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__tools {
     display: flex;
     flex-wrap: wrap;
@@ -153,20 +156,20 @@
     display: block;
     box-sizing: border-box;
     min-width: 600px;
-    background: #fff;
-    border: 1px solid #d6d6d6;
+    background: var(--hui-surface);
+    border: 1px solid var(--hui-line-mid);
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__row {
     display: grid;
     grid-template-columns: 165px minmax(0, 1fr) 110px 100px 130px;
     align-items: center;
-    border-top: 1px solid #e3e3e3;
+    border-top: 1px solid var(--hui-line);
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__row--header {
     align-items: stretch;
-    background: #514943;
+    background: var(--hui-neutral);
     border-top: 0;
-    color: #fff;
+    color: var(--hui-ink-strong);
     font-weight: 600;
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__cell {
@@ -177,7 +180,7 @@
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__row--header .hryvinskyi-datalayer-events__cell {
     padding: 9px 12px;
-    border-right: 1px solid #8a837f;
+    border-right: 1px solid var(--hui-line);
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__row--header .hryvinskyi-datalayer-events__cell:last-child {
     border-right: 0;
@@ -185,65 +188,56 @@
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__group-row {
     display: block;
     padding: 6px 12px;
-    background: #efefef;
-    border-top: 1px solid #d6d6d6;
-    color: #41362f;
+    background: var(--hui-neutral);
+    border-top: 1px solid var(--hui-line-mid);
+    color: var(--hui-ink-strong);
     font-weight: 700;
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__code code {
     padding: 0;
     background: none;
     border: 0;
-    color: #303030;
-    font-family: Menlo, Consolas, monospace;
+    color: var(--hui-ink);
+    font-family: var(--hui-mono);
     font-size: 1.2rem;
     overflow-wrap: anywhere;
 }
-.hryvinskyi-datalayer-events .is-off .hryvinskyi-datalayer-events__code code { color: #9a9a9a; }
+.hryvinskyi-datalayer-events .is-off .hryvinskyi-datalayer-events__code code { color: var(--hui-faint); }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__trigger {
     display: flex;
     flex-direction: column;
     gap: 2px;
 }
-.hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__hint { font-size: 1.15rem; color: #6b6b6b; line-height: 1.4; }
-.hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__badge,
-.hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__fixed {
-    display: inline-block;
-    padding: 2px 8px;
-    background: #f1f1f1;
-    border: 1px solid #d6d6d6;
-    border-radius: 2px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    white-space: nowrap;
-}
+.hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__hint { font-size: 1.15rem; color: var(--hui-muted); line-height: 1.4; }
+/* The admin theme draws a select's caret from a sprite placed for its 3.3rem control height, so the channel select
+   keeps that height; a shorter one shows the caret below its middle. */
 .hryvinskyi-datalayer-events select.hryvinskyi-datalayer-events__channel {
     box-sizing: border-box;
     width: 100%;
-    height: 28px;
+    height: 3.3rem;
     margin: 0;
     padding: 0 6px;
-    background-color: #fff;
-    border: 1px solid #adadad;
+    background-color: var(--hui-surface);
+    border: 1px solid var(--hui-line-strong);
     border-radius: 1px;
-    color: #303030;
+    color: var(--hui-ink);
     font-size: 1.3rem;
     cursor: pointer;
 }
 .hryvinskyi-datalayer-events select.hryvinskyi-datalayer-events__channel:disabled {
-    background-color: #e9e9e9;
-    color: #9a9a9a;
+    background-color: var(--hui-select-disabled);
+    color: var(--hui-disabled-ink);
     cursor: not-allowed;
     opacity: 1;
 }
 .hryvinskyi-datalayer-events select.hryvinskyi-datalayer-events__channel:focus-visible {
-    outline: 2px solid #007bdb;
+    outline: 2px solid var(--hui-focus);
     outline-offset: 1px;
 }
 .hryvinskyi-datalayer-events.is-inherited .hryvinskyi-datalayer-events__table { opacity: .55; }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-events__comment {
     margin: 0;
-    color: #6b6b6b;
+    color: var(--hui-muted);
     font-size: 1.2rem;
     line-height: 1.45;
 }
@@ -280,8 +274,8 @@
     box-sizing: border-box;
     width: 38px;
     height: 22px;
-    background: #e3e3e3;
-    border: 1px solid #adadad;
+    background: var(--hui-line);
+    border: 1px solid var(--hui-line-strong);
     border-radius: 12px;
     transition: background-color .15s, border-color .15s;
 }
@@ -293,20 +287,20 @@
     width: 16px;
     height: 16px;
     border-radius: 50%;
-    background: #fff;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+    background: var(--hui-surface);
+    box-shadow: var(--hui-shadow-knob);
     transition: left .15s;
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-switch__input:checked + .hryvinskyi-datalayer-switch__track {
-    background: #79a22e;
-    border-color: #79a22e;
+    background: var(--hui-switch-on);
+    border-color: var(--hui-switch-on);
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-switch__input:checked + .hryvinskyi-datalayer-switch__track
 .hryvinskyi-datalayer-switch__knob {
     left: 18px;
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-switch__input:focus-visible + .hryvinskyi-datalayer-switch__track {
-    outline: 2px solid #007bdb;
+    outline: 2px solid var(--hui-focus);
     outline-offset: 2px;
 }
 .hryvinskyi-datalayer-events .hryvinskyi-datalayer-switch__input:disabled + .hryvinskyi-datalayer-switch__track,

@@ -8,7 +8,9 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <!-- The look of the data layer's own setting rows: the events table, status lines and warning notes -->
+    <!-- The look of the data layer's own setting rows: the events table, status lines and warning notices -->
+    <!-- The admin UI kit's stylesheet comes first: the rows' own rules read its tokens and override its parts by that order -->
+    <update handle="hryvinskyi_admin_ui"/>
     <head>
         <css src="Hryvinskyi_DataLayerAdminUi::css/config-fields.css"/>
     </head>

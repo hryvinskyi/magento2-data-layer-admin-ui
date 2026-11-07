@@ -4,6 +4,8 @@ Admin part of the GA4 data layer: the settings section under Stores > Configurat
 
 Part of the GA4 Data Layer for Magento 2. The full user guide, covering setup, every setting and how to check what the store sends, is in [`docs/ga4-data-layer-guide.md`](https://github.com/hryvinskyi/magento2-data-layer/blob/main/docs/ga4-data-layer-guide.md) of `hryvinskyi/magento2-data-layer`.
 
+![The setup wizard, step 1: choosing the scope](docs/images/setup-wizard.png)
+
 ## Installation
 
 Install all GA4 Data Layer modules with the metapackage:

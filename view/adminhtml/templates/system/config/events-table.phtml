@@ -11,7 +11,8 @@
  *
  * The table is a grid of `div`s carrying the table roles, so the settings form's own table rules cannot reach its
  * cells. Each Send switch is a native checkbox, kept for the keyboard, the label and assistive technology but drawn
- * by a separate track beside it, so the admin's checkbox styles never show over the switch.
+ * by a separate track beside it, so the admin's checkbox styles never show over the switch. The root carries the admin
+ * UI kit's token class, and the source and fixed-channel labels are the kit's badges.
  *
  * The switches and selects carry no name: the script turns them into the posted inputs. The posted inputs start as
  * the stored values, so a page whose script does not run saves what was there. The JSON configuration is written by
@@ -42,7 +43,7 @@ $sourceTitles = [
     'server' => __('Detected by the store, never posted by a browser'),
 ];
 ?>
-<div class="hryvinskyi-datalayer-events<?= $inherited ? ' is-inherited' : '' ?>"
+<div class="hryvinskyi-datalayer-events hui-tokens<?= $inherited ? ' is-inherited' : '' ?>"
      id="<?= $escaper->escapeHtmlAttr((string) ($view['id'] ?? '')) ?>"
      data-hryvinskyi-datalayer-events-table="1"
      <?= $readonly ? 'data-readonly="1"' : '' ?>>
@@ -124,7 +125,7 @@ $sourceTitles = [
                                     <?php
                                     $sourceTitle = $sourceTitles[!empty($row['browser']) ? 'browser' : 'server'];
                                     ?>
-                                    <span class="hryvinskyi-datalayer-events__badge"
+                                    <span class="hryvinskyi-datalayer-events__badge hui-badge"
                                           title="<?= $escaper->escapeHtmlAttr($sourceTitle) ?>">
                                         <?= $escaper->escapeHtml((string) $row['source']) ?>
                                     </span>
@@ -152,7 +153,7 @@ $sourceTitles = [
                                     $fixedTitle = (string) ($fixedTitles[$fixedChannel] ?? '');
                                     $fixedLabel = __('%1 · fixed', $channels[$fixedChannel] ?? $fixedChannel);
                                     ?>
-                                    <span class="hryvinskyi-datalayer-events__fixed"
+                                    <span class="hryvinskyi-datalayer-events__fixed hui-badge hui-badge--fixed"
                                           title="<?= $escaper->escapeHtmlAttr($fixedTitle) ?>">
                                         <?= $escaper->escapeHtml($fixedLabel) ?>
                                     </span>

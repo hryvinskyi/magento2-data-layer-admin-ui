@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2026-11-07
+
+### Changed
+
+- The settings page's own rows (the events table, the status lines and the warning notices) take their look from the shared admin UI kit: the page links the kit's stylesheet before `config-fields.css`, each of those rows carries the kit's token class `hui-tokens` and reads `--hui-*` tokens instead of its own palette, and Magento's form around them keeps the admin theme. The table header is now the kit's neutral grey instead of brown, and the events table's source and fixed-channel labels are the kit's badges (a fixed channel is drawn with a dashed border). `config-fields.css` no longer styles those two labels; a stylesheet that restyled `hryvinskyi-datalayer-events__badge` or `__fixed` must target `hui-badge` or the tokens.
+- A warning notice row wraps its box in a `div.hui-tokens` inside its table cell.
+- `config-fields.css` no longer styles `.hryvinskyi-datalayer-note--warning`, the warning comment that `hryvinskyi/magento2-data-layer-server-side-admin-ui` prints; that module styles it itself from 1.1.1. `composer.json` declares a conflict with that module below 1.1.1, so the two cannot be installed in a pairing that leaves the warning unstyled.
+
+### Fixed
+
+- The events table's channel select takes the admin control height (3.3rem), so the admin theme's caret sits in its middle instead of below it.
+
 ## [1.1.0] - 2026-11-06
 
 ### Changed

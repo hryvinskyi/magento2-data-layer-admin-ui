@@ -15,7 +15,8 @@ use Magento\Framework\Data\Form\Element\AbstractElement;
  * A full-width warning across the settings form: the field's comment beside a warning sign
  *
  * It stores nothing. A subclass can show it only when the settings call for it. The notice draws its own box rather
- * than borrowing the admin's message styles, so it reads the same in every settings row it is placed in.
+ * than borrowing the admin's message styles, so it reads the same in every settings row it is placed in. The box sits
+ * in a wrapper carrying the admin UI kit's token class, so the table cell around it keeps the admin theme's look.
  */
 class NoticeRow extends ReadOnlyField
 {
@@ -33,12 +34,12 @@ class NoticeRow extends ReadOnlyField
 
         $id = $this->_escaper->escapeHtmlAttr($element->getHtmlId());
 
-        return '<tr id="row_' . $id . '"><td colspan="4">'
+        return '<tr id="row_' . $id . '"><td colspan="4"><div class="hui-tokens">'
             . '<div id="' . $id . '" class="hryvinskyi-datalayer-notice" role="note">'
             . '<span class="hryvinskyi-datalayer-notice__icon" aria-hidden="true">!</span>'
             . '<span class="hryvinskyi-datalayer-notice__text">'
             . $this->_escaper->escapeHtml($this->comment($element)) . '</span>'
-            . '</div></td></tr>';
+            . '</div></div></td></tr>';
     }
 
     /**
